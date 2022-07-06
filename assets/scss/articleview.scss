@@ -1,0 +1,54 @@
+@import "~/assets/scss/variables.scss";
+@import "~/assets/scss/generalSettings.scss";
+
+#edit-area {
+    display: flex;
+}
+#article-view {
+    background: $article-bg-color;
+    width: calc(100% - $edit-area-toolbar-width);
+    min-height: 50rem;
+
+    .editor-content { // The actual editor
+        
+            
+        position: relative;
+        //top: 0px;
+        //bottom: 0px;
+
+        // Text styling
+        line-height: 1.5;
+        font-family: Arial, Helvetica, sans-serif;
+        word-wrap: break-word;
+        h1 {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 3rem;
+            margin: 0px;
+        }
+        p {
+            margin: 0px;
+            font-size: 1.25rem;
+        }
+        .ProseMirror  {
+            padding: 3rem;
+            .is-empty:first-child::before {
+                content: attr(data-placeholder);
+                float: left;
+                color: #ced4da;
+                pointer-events: none;
+                height: 0;
+            }
+            &:focus {
+                outline: none;
+            }
+        }
+    }
+}
+#edit-toolbar {
+    width: $edit-area-toolbar-width;
+    height: fit-content;
+    position: relative;
+    .toolbar-button img {
+        filter: brightness(0)
+    }
+}

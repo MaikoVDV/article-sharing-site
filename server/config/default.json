@@ -1,0 +1,3 @@
+{
+    "mongoURI": "mongodb+srv://admin:SuperSecureAdminPassword@maindb.aia2i.mongodb.net/?retryWrites=true&w=majority"
+}

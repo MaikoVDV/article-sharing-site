@@ -1,0 +1,26 @@
+@import "./variables.scss";
+
+// Some pages display the DOM with some strange margin on the sides. This removes that.
+@mixin noOffsets {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+// Pages with content that's 100% width are annoying for users with wide screens. This is a container for the content that is centered and 'thinner'.
+@mixin pageContentCentered {
+    width: 80%; // Gotta change this for other devices
+    transform: translateX(-50%);
+    position: relative;
+    left: 50%;
+    height: 100%;
+}
+// This is a horizontal container for items of any type.
+@mixin horizontal-flexbox {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+html {
+    background-color: $universal-background-color;
+}
