@@ -1,8 +1,8 @@
 
 <template>
 <div id="article-view" v-if="titleEditor && contentEditor">
-  <editor-content class="editor-content TitleEditor" :editor="titleEditor" />
-  <hr />
+  <pre><editor-content class="editor-content TitleEditor" :editor="titleEditor" /></pre>
+  <hr id="title-separator" />
   <editor-content class="editor-content ContentEditor" :editor="contentEditor" />
 </div>
 </template>

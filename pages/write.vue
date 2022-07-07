@@ -19,6 +19,7 @@ import Highlight from '@tiptap/extension-highlight'
 import History from '@tiptap/extension-history'
 import Document from '@tiptap/extension-document'
 import Placeholder from '@tiptap/extension-placeholder'
+import CharacterCount from '@tiptap/extension-character-count'
 
 import Text from '@tiptap/extension-text'
 import Heading from '@tiptap/extension-heading'
@@ -81,18 +82,30 @@ export default {
                         }
                     },
                 }),
+                CharacterCount.configure({
+                    limit: maxTitleLength,
+                })
             ],
             onUpdate({editor}) {
+                return;
                 // When the content has changed, check if there is more text than allowed.
                 var currentContent = editor.getText();
+                console.log(currentContent.length)
                 if(currentContent.length > maxTitleLength - 1) {
                     // title is too long. cut off more than is allowed.
                     // if last character is a space, replace it with non-breaking space, else all trailing spaces are removed because html
                     var newContent = "";
                     [...currentContent].forEach((character) => {
+                        if(newContent.length < maxTitleLength - 1) {
                             newContent += character;
+                        }
                     })
-                    if(currentContent[maxTitleLength] == ' ') currentContent[maxTitleLength] = `&nbsp`
+                    // console.log(newContent[maxTitleLength - 2])
+                    // if(newContent[maxTitleLength - 2] == ' ') {
+                    //     newContent = newContent.substring(0, maxTitleLength - 2)
+                    //     newContent += `&nbsp`
+                    //     console.log(newContent)
+                    // }
                     editor.commands.setContent(`<h1>${newContent}</h1>`);
                 }
             },

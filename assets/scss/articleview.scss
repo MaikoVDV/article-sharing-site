@@ -9,12 +9,8 @@
     width: calc(100% - $edit-area-toolbar-width);
     min-height: 50rem;
 
-    .editor-content { // The actual editor
-        
-            
+    .editor-content { // Contains ProseMirror, which is the editor
         position: relative;
-        //top: 0px;
-        //bottom: 0px;
 
         // Text styling
         line-height: 1.5;
@@ -24,12 +20,13 @@
             font-family: 'Times New Roman', Times, serif;
             font-size: 3rem;
             margin: 0px;
+            white-space: pre-wrap;
         }
         p {
             margin: 0px;
             font-size: 1.25rem;
         }
-        .ProseMirror  {
+        .ProseMirror  { // The actual editor
             padding: 3rem;
             .is-empty:first-child::before {
                 content: attr(data-placeholder);
@@ -41,6 +38,13 @@
             &:focus {
                 outline: none;
             }
+        }
+    }
+    hr {
+        border: $article-hr-thickness solid $article-hr-color;
+
+        &#title-separator { // HR between title and content
+            width: calc(100% - 6rem);
         }
     }
 }
