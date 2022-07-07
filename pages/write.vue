@@ -4,7 +4,7 @@
     <client-only>
         <div id="edit-area">
             <Toolbar id="edit-toolbar" :editor="this.contentEditor"/>
-            <ArticleView :titleEditor="this.titleEditor" :contentEditor="this.contentEditor"/>
+            <ArticleView :maxTitleLength="this.maxTitleLength" :titleEditor="this.titleEditor" :contentEditor="this.contentEditor"/>
         </div>
     </client-only>
 </div>
@@ -29,7 +29,6 @@ import Toolbar from '~/components/ArticleView/Toolbar/Toolbar.vue'
 const CustomTitle = Document.extend({
   content: 'heading',
 })
-const maxTitleLength = 128;
 
 export default {
     head: {
@@ -42,7 +41,8 @@ export default {
     data() {
         return {
             contentEditor: null,
-            titleEditor: null
+            titleEditor: null,
+            maxTitleLength: 128
         }
     },
     mounted() {
@@ -83,32 +83,9 @@ export default {
                     },
                 }),
                 CharacterCount.configure({
-                    limit: maxTitleLength,
+                    limit: this.maxTitleLength,
                 })
             ],
-            onUpdate({editor}) {
-                return;
-                // When the content has changed, check if there is more text than allowed.
-                var currentContent = editor.getText();
-                console.log(currentContent.length)
-                if(currentContent.length > maxTitleLength - 1) {
-                    // title is too long. cut off more than is allowed.
-                    // if last character is a space, replace it with non-breaking space, else all trailing spaces are removed because html
-                    var newContent = "";
-                    [...currentContent].forEach((character) => {
-                        if(newContent.length < maxTitleLength - 1) {
-                            newContent += character;
-                        }
-                    })
-                    // console.log(newContent[maxTitleLength - 2])
-                    // if(newContent[maxTitleLength - 2] == ' ') {
-                    //     newContent = newContent.substring(0, maxTitleLength - 2)
-                    //     newContent += `&nbsp`
-                    //     console.log(newContent)
-                    // }
-                    editor.commands.setContent(`<h1>${newContent}</h1>`);
-                }
-            },
             autofocus: true,
         })
     },

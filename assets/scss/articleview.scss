@@ -41,7 +41,7 @@
         }
     }
     hr {
-        border: $article-hr-thickness solid $article-hr-color;
+        border: $article-hr-thickness solid $article-secondary-color;
 
         &#title-separator { // HR between title and content
             width: calc(100% - 6rem);
