@@ -1,7 +1,7 @@
 
 <template>
 <div id="article-view" v-if="titleEditor && contentEditor">
-  <pre><editor-content class="editor-content TitleEditor" :editor="titleEditor" /></pre>
+  <editor-content class="editor-content TitleEditor" :editor="titleEditor" />
   <div 
     id="character-count" 
     v-if="titleEditor" 

@@ -26,6 +26,48 @@
             margin: 0px;
             font-size: 1.25rem;
         }
+        .code-block {
+            margin: 0px;
+            padding: $article-code-padding;
+
+            background-color: $article-code-bg-color;
+            border-radius: $article-code-border-radius;
+
+            width: fit-content;
+            min-width: 20%;
+            position: relative;
+            word-break: break-all;
+
+            pre {
+                margin: 0px;
+                font-family: 'Source Code Pro', monospace;
+                clear: right;
+                code {
+                    padding: 0px;
+                    margin: 0px;
+                    display: block;
+                }
+            }
+            select {
+                float: right;
+            }
+            .information-box {
+                color: $article-secondary-color;
+                pointer-events: none;
+                margin: 0px;
+                font-size: 0.75rem;
+                user-select: none;
+                width: fit-content;
+                visibility: hidden;
+                height: 0px;
+            }
+            &.has-focus {
+                .information-box {
+                    visibility: visible;
+                    height: auto;
+                }
+            }
+        }
         .ProseMirror  { // The actual editor
             padding: 3rem;
             .is-empty:first-child::before {
