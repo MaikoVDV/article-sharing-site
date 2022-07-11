@@ -4,9 +4,9 @@
         <div id="main-navigation">
             <TitlebarLogo />
             <TitlebarButton href="/" title="Home"/>
-            <TitlebarButton href="discover" title="Discover"/>
-            <TitlebarButton href="write" title="Write"/>
-            <TitlebarButton href="faq" title="FaQ"/>
+            <TitlebarButton href="/discover" title="Discover"/>
+            <TitlebarButton href="/write" title="Write"/>
+            <TitlebarButton href="/faq" title="FaQ"/>
         </div>
     </div>
     <div id="shadow" />

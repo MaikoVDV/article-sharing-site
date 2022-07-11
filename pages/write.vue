@@ -5,6 +5,7 @@
         <div id="edit-area">
             <Toolbar id="edit-toolbar" :editor="this.contentEditor"/>
             <ArticleView :maxTitleLength="this.maxTitleLength" :titleEditor="this.titleEditor" :contentEditor="this.contentEditor"/>
+            <button v-on:click="submitArticle">Submit!</button>
         </div>
     </client-only>
 </div>
@@ -96,42 +97,6 @@ export default {
         }
     },
     mounted() {
-        this.contentEditor = new Editor({
-            extensions: [
-                StarterKit.configure({
-                    history: false,
-                    code: false,
-                    codeBlock: false
-                }),
-                History.configure({
-                    newGroupDelay: 100,
-                }),
-                Highlight,
-                TaskList,
-                TaskItem,
-                Placeholder.configure({
-                    placeholder: ({ node }) => {
-                        if (node.type.name === 'paragraph') {
-                            return 'Anything else to mention?'
-                        }
-                    },
-                }),
-                CodeBlockLowlight
-                    .extend({
-                        addNodeView() {
-                            return VueNodeViewRenderer(CodeBlockComponent)
-                        },
-                    })
-                    .configure({ lowlight }),
-                Focus.configure({
-                    mode: 'deepest'
-                }),
-            ],
-            autofocus: false,
-            content: `<pre><code>var hello = ""
-hello = "hi!"
-console.log(hello);</code></pre>`,
-        })
         this.titleEditor = new Editor({
             extensions: [
                 CustomTitle,
@@ -153,6 +118,56 @@ console.log(hello);</code></pre>`,
             ],
             autofocus: true,
         })
+        this.contentEditor = new Editor({
+            extensions: [
+                StarterKit.configure({
+                    history: false,
+                    code: false,
+                    codeBlock: false
+                }),
+                History.configure({
+                    newGroupDelay: 100,
+                }),
+                Highlight,
+                TaskList,
+                TaskItem,
+                Placeholder.configure({
+                    placeholder: ({ node }) => {
+                        if (node.type.name === 'paragraph') {
+                            return 'Click here to add your content'
+                        }
+                    },
+                }),
+                CodeBlockLowlight
+                    .extend({
+                        addNodeView() {
+                            return VueNodeViewRenderer(CodeBlockComponent)
+                        },
+                    })
+                    .configure({ lowlight }),
+                Focus.configure({
+                    mode: 'deepest'
+                }),
+            ],
+            autofocus: false,
+        })
+    },
+    methods: {
+        submitArticle: function() {
+            console.log(this.contentEditor.getJSON())
+
+            this.$axios.post('http://localhost:3001/api/submitArticle', {
+                title: this.titleEditor.getText(), 
+                document: this.contentEditor.getJSON()
+            })
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        }
     },
     beforeUnmount() {
         this.editor.destroy()
