@@ -6,20 +6,26 @@ const nanoid = customAlphabet('0123456789', 12)
 // Article model
 const Document = require("../../models/fullArticle");
 
-// @route  Get api/articleList
-// @desc   Get all articles
-// @access Public
-router.get("/", (req, res) => {
-    let amount = (req.body.amount != undefined) ? req.body.amount : 10; // Request 10 articles by default, or x if specified
-    const maxArticles = 25;
-    if (amount > maxArticles) amount = maxArticles;
-    
-    Document.find()
-    .limit(amount)
-    .then(documents => {
-        return res.json(documents)
+router.get("/:articleId", (req, res) => {
+    var articleId = Number(req.params.articleId)
+    if(!Number.isInteger(articleId) || articleId < 0 || articleId > 999999999999) {
+        console.log("Invalid articleID requested.")
+        return res.status(400).json({ msg: "The ID of the article requested is invalid. Must be a 12 digit positive number." })
+    }
+
+    Document.findOne({shortId: articleId})
+    .then((document, err) => {
+        if(err) {
+            console.log(err);
+            return res.status(500).send("An error occurred on the server while processing your request.")
+        }
+        if(document == null) {
+            return res.status(404).send("The requested article could not be found.")
+        }
+        return res.status(200).json(document)
     })
 })
+
 // User submits article to server, which saves it to the database.
 router.post("/", async (req, res) => {
     // Generating an ID that is unique to the article
@@ -27,7 +33,7 @@ router.post("/", async (req, res) => {
     if(shortId == null) {
         var err = "Error occurred! Failed to generate a unique short ID for the article. Please try again or contact the admin."
         console.log(err)
-        return res.status(507).json({msg: err})
+        return res.status(507).send(err)
     }
 
     const document = new Document({
@@ -42,9 +48,9 @@ router.post("/", async (req, res) => {
     document.save().then((response, err) => {
         if(err) {
             console.log(err)
-            return res.err.json({msg: "Error occurred!", err: err})
+            return res.err.send(err)
         }
-        return res.json("Document posted!")
+        return res.send("Document posted!")
     })
 })
 // A function to find a unique ID (12-digit number) for an article

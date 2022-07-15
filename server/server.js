@@ -8,7 +8,7 @@ const cors = require('cors');
 const testRoute = require('./routes/api/testRoute');
 const articleList = require('./routes/api/articleList');
 const write = require('./routes/api/write');
-const submitArticle = require('./routes/api/submitArticle');
+const document = require('./routes/api/document');
 
 // Initializing the express app
 const app = express()
@@ -39,7 +39,7 @@ mongoose.connect(db)
 app.use('/api/testRoute', testRoute);
 app.use('/api/articleList', articleList);
 app.use('/api/write', write);
-app.use('/api/submitArticle', submitArticle);
+app.use('/api/document', document);
 
 app.get('/', (req, res) => {
   res.send('Hello World!')

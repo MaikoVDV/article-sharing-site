@@ -13,6 +13,8 @@
 
 <script>
 import { Editor, EditorContent, VueNodeViewRenderer } from '@tiptap/vue-2'
+import { Extension } from '@tiptap/core'
+import { generateJSON } from '@tiptap/html'
 import StarterKit from '@tiptap/starter-kit'
 import TaskList from '@tiptap/extension-task-list'
 import TaskItem from '@tiptap/extension-task-item'
@@ -79,6 +81,14 @@ lowlight.registerLanguage('typescript', typescript)
 
 const CustomTitle = Document.extend({
   content: 'heading',
+})
+const TabExtension = Extension.create({
+    name: "TabExtension",
+    addKeyboardShortcuts() {
+        return {
+            'Tab': () => this.editor.commands.insertContent("    "),
+        }
+    },
 })
 
 export default {
@@ -148,15 +158,16 @@ export default {
                 Focus.configure({
                     mode: 'deepest'
                 }),
+                TabExtension,
             ],
             autofocus: false,
         })
     },
     methods: {
         submitArticle: function() {
-            console.log(this.contentEditor.getJSON())
+            console.log(this.contentEditor.getHTML())
 
-            this.$axios.post('http://localhost:3001/api/submitArticle', {
+            this.$axios.post('http://localhost:3001/api/document', {
                 title: this.titleEditor.getText(), 
                 document: this.contentEditor.getJSON()
             })
@@ -167,6 +178,25 @@ export default {
                 console.log(error);
             });
 
+        },
+        convertToJSON() {
+            return generateJSON(this.contentEditor.getHTML(), [
+                // Extensions
+                StarterKit.configure({
+                    history: false,
+                    code: false,
+                    codeBlock: false
+                }),
+                CodeBlockLowlight
+                    .extend({
+                        addNodeView() {
+                            return VueNodeViewRenderer(CodeBlockComponent)
+                        },
+                    })
+                    .configure({ lowlight }),
+                TaskList,
+                TaskItem,
+            ])
         }
     },
     beforeUnmount() {

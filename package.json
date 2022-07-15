@@ -28,6 +28,7 @@
     "@tiptap/vue-2": "^2.0.0-beta.79",
     "concurrently": "^7.2.0",
     "core-js": "^3.19.3",
+    "highlight.js": "^10.7.0",
     "lowlight": "^1.20.0",
     "nuxt": "^2.15.8",
     "tiptap": "^1.32.2",
