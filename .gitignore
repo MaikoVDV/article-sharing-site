@@ -90,4 +90,4 @@ sw.*
 *.swp
 
 # Super secret auth stuff
-/server/config/*
+/server/config
