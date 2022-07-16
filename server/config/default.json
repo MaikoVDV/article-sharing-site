@@ -1,7 +1,0 @@
-{
-    "mongoURI": "mongodb+srv://admin:SuperSecureAdminPassword@maindb.aia2i.mongodb.net/?retryWrites=true&w=majority",
-    "graphQL": {
-        "endpoint": "https://eu-central-1.aws.realm.mongodb.com/api/client/v2.0/app/application-0-kfasb/graphql",
-        "apiKey": "YTX18Idri2UZZmEecxDzpNUnFpj8OasN0HtdFza6w4vTzBRpXDy493eFoM51uZke"
-    }
-}
