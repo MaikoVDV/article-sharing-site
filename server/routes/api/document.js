@@ -2,28 +2,82 @@ const express = require("express");
 const router = express.Router();
 var { customAlphabet } = require("nanoid")
 const nanoid = customAlphabet('0123456789', 12)
+const axios = require("axios")
 
 // Article model
 const Document = require("../../models/fullArticle");
+const config = require("config")
 
-router.get("/:articleId", (req, res) => {
+// router.get("/old/:articleId", (req, res) => {
+//     var articleId = Number(req.params.articleId)
+//     if(!Number.isInteger(articleId) || articleId < 0 || articleId > 999999999999) {
+//         console.log("Invalid articleID requested.")
+//         return res.status(400).json({ msg: "The ID of the article requested is invalid. Must be a 12 digit positive number." })
+//     }
+
+//     Document.findOne({shortId: articleId})
+//     .then((document, err) => {
+//         if(err) {
+//             console.log(err);
+//             return res.status(500).send("An error occurred on the server while processing your request.")
+//         }
+//         if(document == null) {
+//             return res.status(404).send("The requested article could not be found.")
+//         }
+//         return res.status(200).json(document)
+//     })
+// })
+router.get("/:articleId", (req, res) => { // Route to get an article (shown in client at /article/{shortId})
     var articleId = Number(req.params.articleId)
     if(!Number.isInteger(articleId) || articleId < 0 || articleId > 999999999999) {
         console.log("Invalid articleID requested.")
         return res.status(400).json({ msg: "The ID of the article requested is invalid. Must be a 12 digit positive number." })
     }
 
-    Document.findOne({shortId: articleId})
-    .then((document, err) => {
+    const headers = {
+        "content-type": "application/json",
+        "apiKey": config.get("graphQL.apiKey")
+    };
+    const graphqlQuery = {
+        "query": `
+        {
+            document(query: {shortId: ${articleId}}) {
+                title
+                date
+                document {
+                    type
+                    content {
+                        attrs {
+                            language
+                            level
+                        }
+                        content {
+                            type
+                            text
+                            marks {
+                                type
+                            }
+                        }
+                        type
+                    }
+                }
+            }
+        }
+        `,
+        "variables": {}
+    };
+
+    axios({
+        url: config.get("graphQL.endpoint"),
+        method: 'post',
+        headers: headers,
+        data: graphqlQuery
+    }).then((response, err) => {
         if(err) {
-            console.log(err);
-            return res.status(500).send("An error occurred on the server while processing your request.")
+            return res.status(500).json(err)
         }
-        if(document == null) {
-            return res.status(404).send("The requested article could not be found.")
-        }
-        return res.status(200).json(document)
-    })
+        return res.status(200).json(response.data)
+    });
 })
 
 // User submits article to server, which saves it to the database.

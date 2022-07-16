@@ -68,20 +68,23 @@ export default {
         // Article Title: string for users to identify the URL easier (optional)
 
         const res = await $axios.$get(`http://localhost:3001/api/document/${params.articleId}`).catch(err => {
-            return console.log(err.response.data)
+            return console.err(err.response.data)
         })
         if(res != undefined) {
-            var doc = generateHTML(res.document, [StarterKit])
+            try {
+                var doc = generateHTML(res.data.document.document, [StarterKit])
+            } catch(err) {
+                console.error(err)
+            }
             return {
                 jsonDoc: res.document,
                 document: doc,
-                title: res.title
+                title: res.data.document.title
             }
         }
     },
     mounted() {
         if(process.client) {
-            console.log(hljs.listLanguages())
             hljs.highlightAll()
         }
     }

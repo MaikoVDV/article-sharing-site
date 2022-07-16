@@ -88,3 +88,6 @@ sw.*
 
 # Vim swap files
 *.swp
+
+# Super secret auth stuff
+/server/config/*

@@ -1,8 +1,7 @@
 <template>
 <div class="page-content">
     <h1 class="page-title">Discover</h1>
-    <!--<button @click="addArticles()">Click me!</button>-->
-    <ArticlePreview v-for="article in articles" :key="article._id" :article="article" />
+    <ArticlePreview v-for="document in documents" :key="document.shortId" :document="document" />
 </div>
 </template>
 <script>
@@ -12,8 +11,8 @@
         },
 
         async asyncData({ $axios }) {
-            const res = await $axios.$get('http://localhost:3001/api/articleList')
-            return { articles: res}
+            const res = await $axios.$get('http://localhost:3001/api/documentList')
+            return { documents: res.data.documents}
         },
 }
 </script>

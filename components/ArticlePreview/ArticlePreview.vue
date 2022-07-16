@@ -1,37 +1,49 @@
 <template>
-<div class="article-preview">
-    <div class="text-container">
-        <h2>{{ article.title }}</h2>
-        <p>{{ article.description }}</p>
-    </div>
-    <div class="author-section">
-        <img :src="article.author.icon" v-if="article.author.icon != undefined">
-        <img src="~/assets/images/Unknown User Icon.jpg" v-else>
-        <p>{{article.author.name}} | {{ new Date(article.date).toLocaleString()}}</p>
-    </div>
-    <img class="thumbnail" :src="article.thumbnail" v-if="article.thumbnail != undefined || article.thumbnail == ''">
-</div>
+<NuxtLink :to="redirectURL" class="article-preview">
+        <div class="text-container">
+            <h2>{{ document.title }}</h2>
+            <p v-if="document.description != undefined">{{ document.description }}</p>
+        </div>
+        <div class="author-section" v-if="document.author != undefined">
+            <img :src="document.author.icon" v-if="document.author.icon != undefined">
+            <img src="~/assets/images/Unknown User Icon.jpg" v-else>
+            <p v-if="document.author.name != undefined">{{document.author.name}} | {{ new Date(document.date).toLocaleString()}}</p>
+        </div>
+        <img class="thumbnail" :src="document.thumbnail" v-if="document.thumbnail != undefined || document.thumbnail == ''">
+
+    </NuxtLink>
 </template>
 <script>
 export default {
     computed: {
         thumbnail() {
-            return require(`~/assets/images/${this.article.thumbnailLink}`);
+            try {
+                return require(`~/assets/images/${this.document.thumbnailLink}`);
+            } catch {
+                console.error(`Thumbnail ${this.document.thumbnailLink} could not be found`)
+            }
         },
         authorIcon() {
-            return require(`~/assets/images/${this.article.author.icon}`);
+            try {
+                return require(`~/assets/images/${this.document.author.icon}`);
+            } catch {
+                console.error(`Author icon ${this.document.author.icon} could not be found`)
+            }
+        },
+        redirectURL() {
+            return `article/${this.document.shortId}`
         }
     },
     props: {
-        article: {
+        document: {
             title: String,
+            shortId: String,
+            date: String,
             description: String,
             author: Object,
-            date: String,
             thumbnail: String,
-            id: String
         }
-    }
+    },
 }
 </script>
 <style scoped lang="scss">
@@ -47,6 +59,8 @@ export default {
         box-sizing: border-box;
         margin: $preview-margin 0px;
         padding: $preview-padding;
+        display: inline-block;
+        
 
         // Styling
         background: white;
@@ -54,6 +68,8 @@ export default {
 
         box-shadow: 0px 0px 25px 0.2rem #00000033;
         transition: box-shadow 0.3s, width 0.3s, height 0.3s;
+        text-decoration: none;
+        color: black;
 
         &:hover {
             box-shadow: 0px 0px 25px 0.5rem #00000055;

@@ -8,6 +8,7 @@
     background: $article-bg-color;
     width: calc(100% - $edit-area-toolbar-width);
     min-height: 50rem;
+    margin-bottom: 20rem;
 
     .editor-content { // Contains ProseMirror, which is the editor
         position: relative;
