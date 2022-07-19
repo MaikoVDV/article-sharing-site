@@ -3,6 +3,8 @@ const express = require('express')
 const mongoose = require('mongoose');
 const path = require('path');
 const cors = require('cors');
+const dotenv = require('dotenv')
+
 // Importing middleware
 const { expressjwt: jwt } = require("express-jwt")
 const jwks = require("jwks-rsa")
@@ -13,9 +15,8 @@ const write = require('./routes/api/write');
 const document = require('./routes/api/document');
 const documentList = require('./routes/api/documentList');
 
-
-const hyperSecureEndpoint = require('./routes/api/hyperSecureEndpoint');
-
+// Getting the .env file
+dotenv.config(); 
 // Initializing the express app
 const app = express()
 const port = 3001
@@ -35,10 +36,6 @@ var jwtCheck = jwt({
 });
 app.use(jwtCheck);
 
-
-const config = require('config') // Importing config from ./config/default.json
-
-
 // CORS middleware to allow requests from other domains
 const corsConfig = {
     origin: true,
@@ -47,7 +44,7 @@ const corsConfig = {
 app.use(cors(corsConfig));
 
 // Database config
-const db = config.get('mongoURI');
+const db = process.env.MONGO_URI;
 
 // Connecting to database
 mongoose.connect(db)
@@ -60,7 +57,6 @@ app.use('/api/articleList', articleList);
 app.use('/api/write', write);
 app.use('/api/document', document);
 app.use('/api/documentList', documentList);
-app.use('/api/hyperSecureEndpoint', hyperSecureEndpoint);
 
 app.get('/', (req, res) => {
   res.send('Hello World!')

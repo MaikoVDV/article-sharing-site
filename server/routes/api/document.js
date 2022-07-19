@@ -36,7 +36,7 @@ router.get("/:articleId", (req, res) => { // Route to get an article (shown in c
 
     const headers = {
         "content-type": "application/json",
-        "apiKey": config.get("graphQL.apiKey")
+        "apiKey": process.env.GRAPHQL_KEY
     };
     const graphqlQuery = {
         "query": `
@@ -68,7 +68,7 @@ router.get("/:articleId", (req, res) => { // Route to get an article (shown in c
     };
 
     axios({
-        url: config.get("graphQL.endpoint"),
+        url: process.env.GRAPHQL_ENDPOINT,
         method: 'post',
         headers: headers,
         data: graphqlQuery
