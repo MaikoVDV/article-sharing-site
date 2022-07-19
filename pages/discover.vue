@@ -10,8 +10,14 @@
             title: "Discover"
         },
 
-        async asyncData({ $axios }) {
-            const res = await $axios.$get('http://localhost:3001/api/documentList')
+        async asyncData({ $axios, $cookies }) {
+            //console.log($cookies.get("access_token"))
+            
+            const res = await $axios.$get('http://localhost:3001/api/documentList', {
+                headers: {
+                    "Authorization": `Bearer ${$cookies.get("access_token")}`
+                }
+            })
             return { documents: res.data.documents}
         },
 }

@@ -10,8 +10,6 @@ router.get("/", async (req, res) => {
     let amount = (req.body.amount != undefined) ? req.body.amount : 10; // Request 10 articles by default, or x if specified
     const maxArticles = 25;
     if (amount > maxArticles) amount = maxArticles;
-    await new Promise(r => setTimeout(r, 10000));
-
     
     const headers = {
         "content-type": "application/json",

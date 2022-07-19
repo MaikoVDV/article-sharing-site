@@ -62,14 +62,16 @@ export default {
     head: {
         title: "Article"
     },
-    async asyncData({params, $axios }) {
+    async asyncData({params, $axios, $cookies }) {
         // params looks like this:
         // ArticleID: string to identify the article
         // Article Title: string for users to identify the URL easier (optional)
 
-        const res = await $axios.$get(`http://localhost:3001/api/document/${params.articleId}`).catch(err => {
-            return console.err(err.response.data)
-        })
+        const res = await $axios.$get(`http://localhost:3001/api/document/${params.articleId}`, { headers: {"Authorization": `Bearer ${$cookies.get("access_token")}`}})
+            .catch(err => {
+                return console.error(err.response.data)
+            })
+        console.log(res)
         if(res != undefined) {
             try {
                 var doc = generateHTML(res.data.document.document, [StarterKit])

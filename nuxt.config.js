@@ -43,6 +43,7 @@ export default {
     modules: [
       // https://go.nuxtjs.dev/axios
       '@nuxtjs/axios',
+      'cookie-universal-nuxt',
     ],
   
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -50,12 +51,25 @@ export default {
       // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
       baseURL: '/',
     },
+    // auth: {
+    //   redirect: {
+    //     login: '/', // redirect user when not connected
+    //     callback: '/auth/signed-in'
+    //   },
+    //   strategies: {
+    //     local: false,
+    //     auth0: {
+    //       domain: process.env.AUTH0_DOMAIN,
+    //       client_id: process.env.AUTH0_CLIENT_ID,
+    //       response_type: 'code',
+    //       grant_type: 'authorization_code',
+    //       code_challenge_method: 'S256',
+    //     }
+    //   },
+    // },
   
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {
     },
-    loading: {
-      color: 'blue',
-      height: '50px'
-    }
+    loading: "~/components/Loading/LoadingIndicator"
   }

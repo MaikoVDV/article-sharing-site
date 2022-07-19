@@ -8,10 +8,21 @@
             <TitlebarButton href="/write" title="Write"/>
             <TitlebarButton href="/faq" title="FaQ"/>
         </div>
+        <Profile />
     </div>
     <div id="shadow" />
 </div>
 </template>
+<script>
+import AuthButton from '~/components/Auth/AuthButton.vue'
+import Profile from "~/components/Titlebar/Profile/Profile.vue"
+export default {
+    components: {
+        AuthButton,
+        Profile,
+    }
+}
+</script>
 <style scoped lang="scss">
     @import "~/assets/scss/variables";
     @import "~/assets/scss/generalSettings";
@@ -26,6 +37,8 @@
         width: 100%;
         height: $titlebar-thickness;
         position: fixed !important;
+        padding: 0px 1rem;
+        box-sizing: border-box;
         @include noOffsets;
 
         // Styling
@@ -36,9 +49,12 @@
         font-family: 'Lato', Arial, sans-serif;
 
         @include horizontal-flexbox;
+        justify-content: space-between;
     }
     #main-navigation {
         @include horizontal-flexbox;
+        width: max-content;
+        height: 100%;
     }
     #shadow {
         background-image: linear-gradient(to bottom, #00000033, transparent);
