@@ -1,5 +1,5 @@
 <template>
-    <NuxtLink to="/"><img src="~/assets/images/Amogus.png"></NuxtLink>
+    <NuxtLink to="/"><img src="~/assets/images/Amogus.png" alt="Logo"></NuxtLink>
 </template>
 
 <style scoped lang="scss">

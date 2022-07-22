@@ -21,6 +21,9 @@
     justify-content: flex-start;
     align-items: center;
 }
+@mixin rounded-icon {
+    border-radius: 50%;
+}
 html {
     background-color: $universal-background-color;
 }

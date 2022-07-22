@@ -95,11 +95,3 @@
         }
     }
 }
-#edit-toolbar {
-    width: $edit-area-toolbar-width;
-    height: fit-content;
-    position: relative;
-    .toolbar-button img {
-        filter: brightness(0)
-    }
-}

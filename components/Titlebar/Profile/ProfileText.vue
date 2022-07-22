@@ -11,5 +11,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
+    #profile-text {
+        margin-right: 1rem;
+    }
 </style>

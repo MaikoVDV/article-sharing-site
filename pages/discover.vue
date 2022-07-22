@@ -10,15 +10,13 @@
             title: "Discover"
         },
 
-        async asyncData({ $axios, $cookies }) {
-            //console.log($cookies.get("access_token"))
-            
-            const res = await $axios.$get('http://localhost:3001/api/documentList', {
-                headers: {
-                    "Authorization": `Bearer ${$cookies.get("access_token")}`
-                }
-            })
-            return { documents: res.data.documents}
+        async asyncData({ $axios }) {
+            try {
+                const res = await $axios.$get('http://localhost:3001/api/documentList')
+                return { documents: res.data.documents}
+            } catch {
+                console.log("Failed to request document list :(")
+            }
         },
 }
 </script>

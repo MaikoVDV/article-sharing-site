@@ -5,28 +5,8 @@ const nanoid = customAlphabet('0123456789', 12)
 const axios = require("axios")
 
 // Article model
-const Document = require("../../models/fullArticle");
-const config = require("config")
+const Document = require("../../models/document");
 
-// router.get("/old/:articleId", (req, res) => {
-//     var articleId = Number(req.params.articleId)
-//     if(!Number.isInteger(articleId) || articleId < 0 || articleId > 999999999999) {
-//         console.log("Invalid articleID requested.")
-//         return res.status(400).json({ msg: "The ID of the article requested is invalid. Must be a 12 digit positive number." })
-//     }
-
-//     Document.findOne({shortId: articleId})
-//     .then((document, err) => {
-//         if(err) {
-//             console.log(err);
-//             return res.status(500).send("An error occurred on the server while processing your request.")
-//         }
-//         if(document == null) {
-//             return res.status(404).send("The requested article could not be found.")
-//         }
-//         return res.status(200).json(document)
-//     })
-// })
 router.get("/:articleId", (req, res) => { // Route to get an article (shown in client at /article/{shortId})
     var articleId = Number(req.params.articleId)
     if(!Number.isInteger(articleId) || articleId < 0 || articleId > 999999999999) {
@@ -44,23 +24,8 @@ router.get("/:articleId", (req, res) => { // Route to get an article (shown in c
             document(query: {shortId: ${articleId}}) {
                 title
                 date
-                document {
-                    type
-                    content {
-                        attrs {
-                            language
-                            level
-                        }
-                        content {
-                            type
-                            text
-                            marks {
-                                type
-                            }
-                        }
-                        type
-                    }
-                }
+                document
+                authorId
             }
         }
         `,
@@ -93,7 +58,9 @@ router.post("/", async (req, res) => {
     const document = new Document({
         title: req.body.title, // Title of the article, plaintext
         document: req.body.document, // The article itself, XML
-        shortId: shortId // A 12 digit number unique to the article, to be used in the URL in stead of the Mongo ObjectID because it's ugly.
+        description: req.body.description,
+        shortId: shortId, // A 12 digit number unique to the article, to be used in the URL in stead of the Mongo ObjectID because it's ugly.
+        authorId: req.body.authorId
     })
     // NEEDS VERIFYING AND LIKE CYBERSECURITY STUFF YOU KNOW
 

@@ -1,17 +1,16 @@
 <template>
-<div class="page-content">
-    <div id="document-area">
-        <div id="article-view">
-            <h1>{{title}}</h1>
-            <div v-html="document" class="editor-content"></div>
+<div>
+    <div class="page-content">
+        <div id="document-area">
+            <div id="article-view">
+                <h1>{{title}}</h1>
+                <div v-html="document" class="editor-content"></div>
+            </div>
         </div>
     </div>
 </div>
 </template>
 <script>
-import { generateHTML } from '@tiptap/html'
-import StarterKit from '@tiptap/starter-kit'
-
 import javascript from 'highlight.js/lib/languages/javascript.js'
 import json from 'highlight.js/lib/languages/json.js'
 import xml from 'highlight.js/lib/languages/xml.js'
@@ -62,25 +61,19 @@ export default {
     head: {
         title: "Article"
     },
-    async asyncData({params, $axios, $cookies }) {
+    async asyncData({params, $axios, store }) {
         // params looks like this:
         // ArticleID: string to identify the article
         // Article Title: string for users to identify the URL easier (optional)
 
-        const res = await $axios.$get(`http://localhost:3001/api/document/${params.articleId}`, { headers: {"Authorization": `Bearer ${$cookies.get("access_token")}`}})
+        const res = await $axios.$get(`http://localhost:3001/api/document/${params.articleId}`, { headers: {"Authorization": `Bearer ${store.state.authInfo.accessToken}`}})
             .catch(err => {
                 return console.error(err.response.data)
             })
-        console.log(res)
         if(res != undefined) {
-            try {
-                var doc = generateHTML(res.data.document.document, [StarterKit])
-            } catch(err) {
-                console.error(err)
-            }
             return {
-                jsonDoc: res.document,
-                document: doc,
+                jsonDoc: res.data.document,
+                document: `${res.data.document.document}`,
                 title: res.data.document.title
             }
         }
@@ -92,14 +85,19 @@ export default {
     }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 @import '~/assets/scss/generalSettings.scss';
 @import '~/assets/scss/variables.scss';
     .page-content {
         @include pageContentCentered;
     }
-    #article-view {
-        padding: 3rem;
+    #document-area {
         margin-top: 3rem;
+        #article-view {
+            padding: 3rem;
+            p:empty::before {
+                content: "\00a0\00a0"; // Adds a non-breaking space in empty paragraphs to make them linebreaks.
+            }
+        }
     }
 </style>

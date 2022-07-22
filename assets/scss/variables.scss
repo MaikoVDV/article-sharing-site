@@ -16,7 +16,7 @@ $z-index-titlebar: 50;
 $z-index-titlebar-shadow: 49;
 
 // Discover page
-$preview-margin: 1rem;
+$preview-margin: 0.5rem;
 $preview-padding: 1rem;
 $preview-width: 100%;
 $preview-height: 10rem;
@@ -27,7 +27,8 @@ $preview-author-height: 2rem;
 // Article view
 $article-bg-color: #F5F5F5;
 $edit-area-toolbar-width: 4rem;
-$toolbar-button-color: #000;
+$toolbar-button-color: #F5F5F5;
+$toolbar-button-color-hover: #e7e7e7;
 // Article styling
 $article-primary-color: black;
 $article-secondary-color: #acb3bb;

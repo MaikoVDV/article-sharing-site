@@ -14,7 +14,7 @@
 <script>
 import { Editor, EditorContent, VueNodeViewRenderer } from '@tiptap/vue-2'
 import { Extension } from '@tiptap/core'
-import { generateJSON } from '@tiptap/html'
+import { generateHTML } from '@tiptap/html'
 import StarterKit from '@tiptap/starter-kit'
 import TaskList from '@tiptap/extension-task-list'
 import TaskItem from '@tiptap/extension-task-item'
@@ -165,11 +165,39 @@ export default {
     },
     methods: {
         submitArticle: function() {
-            console.log(this.contentEditor.getHTML())
+            const editorContent = this.contentEditor.getJSON()
+            let description = "";
+            try {
+                if(editorContent.content[0].type == "paragraph") {
+                    description = generateHTML(editorContent.content[0], [
+                        StarterKit.configure({
+                            blockquote: false,
+                            bulletList: false,
+                            codeBlock: false,
+                            hardBreak: false,
+                            heading: false,
+                            horizontalRule: false,
+                            listItem: false,
+                            orderedList: false,
+                            code: false,
+                            dropcursor: false,
+                            gapcursor: false,
+                            history: false
+                        })
+                    ])
+                }
+            } catch (err) {
 
+            }
             this.$axios.post('http://localhost:3001/api/document', {
                 title: this.titleEditor.getText(), 
-                document: this.contentEditor.getJSON()
+                document: this.contentEditor.getHTML(),
+                authorId: this.$store.state.authInfo.userInfo.sub,
+                description: description
+            }, {
+                headers: {
+                    "Authorization": `Bearer ${this.$store.state.authInfo.accessToken}`
+                }
             })
             .then(function (response) {
                 console.log(response);
@@ -179,25 +207,6 @@ export default {
             });
 
         },
-        convertToJSON() {
-            return generateJSON(this.contentEditor.getHTML(), [
-                // Extensions
-                StarterKit.configure({
-                    history: false,
-                    code: false,
-                    codeBlock: false
-                }),
-                CodeBlockLowlight
-                    .extend({
-                        addNodeView() {
-                            return VueNodeViewRenderer(CodeBlockComponent)
-                        },
-                    })
-                    .configure({ lowlight }),
-                TaskList,
-                TaskItem,
-            ])
-        }
     },
     beforeUnmount() {
         this.editor.destroy()

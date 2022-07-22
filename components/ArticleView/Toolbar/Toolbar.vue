@@ -42,7 +42,6 @@ export default {
     window.onscroll = function() {
       that.getScrollTop();
       var scroll = that.scrollDist;
-      console.log(scroll)
 
       if (scroll <= 0) {
         that.$el.style.top = "0px";
@@ -142,6 +141,15 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss">
+@import "~/assets/scss/variables.scss";
+@import "~/assets/scss/generalSettings.scss";
+  #edit-toolbar {
+    width: $edit-area-toolbar-width;
+    height: fit-content;
+    position: relative;
+    .toolbar-button img {
+      filter: brightness(0)
+    }
+  }
 </style>

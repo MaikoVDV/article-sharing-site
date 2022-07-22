@@ -2,12 +2,12 @@
 <NuxtLink :to="redirectURL" class="article-preview">
         <div class="text-container">
             <h2>{{ document.title }}</h2>
-            <p v-if="document.description != undefined">{{ document.description }}</p>
+            <p v-if="document.description != undefined" v-html="document.description"></p>
         </div>
-        <div class="author-section" v-if="document.author != undefined">
-            <img :src="document.author.icon" v-if="document.author.icon != undefined">
-            <img src="~/assets/images/Unknown User Icon.jpg" v-else>
-            <p v-if="document.author.name != undefined">{{document.author.name}} | {{ new Date(document.date).toLocaleString()}}</p>
+        <div class="author-section" v-if="document.authorId != undefined && foundAuthorInfo">
+            <img v-if="authorIcon != undefined" :src="authorIcon"  referrerpolicy="no-referrer" alt="Author Profile Picture">
+            <img src="~/assets/images/Unknown User Icon.jpg" v-else alt="Author Profile Picture">
+            <p v-if="authorName != undefined">{{authorName}} | {{ document.date}}</p>
         </div>
         <img class="thumbnail" :src="document.thumbnail" v-if="document.thumbnail != undefined || document.thumbnail == ''">
 
@@ -17,17 +17,11 @@
 export default {
     computed: {
         thumbnail() {
+            if(this.document.thumbnailLink == undefined) return null;
             try {
                 return require(`~/assets/images/${this.document.thumbnailLink}`);
             } catch {
                 console.error(`Thumbnail ${this.document.thumbnailLink} could not be found`)
-            }
-        },
-        authorIcon() {
-            try {
-                return require(`~/assets/images/${this.document.author.icon}`);
-            } catch {
-                console.error(`Author icon ${this.document.author.icon} could not be found`)
             }
         },
         redirectURL() {
@@ -40,10 +34,27 @@ export default {
             shortId: String,
             date: String,
             description: String,
-            author: Object,
+            authorId: Object,
             thumbnail: String,
         }
     },
+    data() {
+        return {
+            foundAuthorInfo: false,
+            authorName: false,
+            authorIcon: null
+        }
+    },
+    async fetch() {
+        // Get the author's name and profile picture
+        const res = await this.$axios.$get(`http://localhost:3001/api/users/basicInfo/${this.document.authorId}`).catch(err => {
+            console.log("Err trying to fetch author data")
+            return console.error(err)
+        })
+        this.authorIcon = res.iconLink
+        this.authorName = res.username
+        this.foundAuthorInfo = true;
+    }
 }
 </script>
 <style scoped lang="scss">
@@ -101,6 +112,11 @@ export default {
 
             img {
                 height: 100%;
+                @include rounded-icon;
+                margin-right: 0.75rem;
+            }
+            p {
+                margin: 0px;
             }
         }
         &:last-child {

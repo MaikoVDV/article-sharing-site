@@ -58,7 +58,7 @@ export default {
         getAccessToken.then((accessToken) => {
             var that = this
             getUserInfo(accessToken, that).then((userInfo) => {
-                this.putDataIntoStore(userInfo, true)
+                this.putDataIntoStore(userInfo, true, accessToken)
             }).catch(err => {
                 console.log(err)
             });
@@ -67,10 +67,13 @@ export default {
         });
     },
     methods: {
-        putDataIntoStore(userInfo, loggedIn) {
+        putDataIntoStore(userInfo, loggedIn, accessToken) {
             this.$store.commit('authInfo/setUserInfo', userInfo)
             this.$store.commit('authInfo/setLoggedIn', loggedIn)
-            this.$router.push("/")
+            this.$store.commit('authInfo/addAccessToken', accessToken)
+            this.$cookies.set("loggedInBefore", true, { sameSite: true, maxAge: 60 * 24 * 30, path: "/", secure: true})
+            this.$cookies.set("accessToken", accessToken, { sameSite: true, maxAge: 60 * 24, path: "/", secure: true})
+            this.$router.push(this.$cookies.get("currentPage"))
         }
     }
 }

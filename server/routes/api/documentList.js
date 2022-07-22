@@ -22,12 +22,13 @@ router.get("/", async (req, res) => {
                 shortId
                 title
                 date
+                authorId
+                description
             }
         }
         `,
         "variables": {}
     };
-
     axios({
         url: process.env.GRAPHQL_ENDPOINT,
         method: 'post',
@@ -37,7 +38,36 @@ router.get("/", async (req, res) => {
         if(err) {
             return res.status(500).json(err)
         }
-        return res.status(200).json(response.data)
+        try {
+            //console.log(response.data)
+            let documents = response.data.data.documents;
+            const months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+            documents.forEach(document => {
+                let originalDate = new Date(document.date)
+                let day = originalDate.getDate()
+                const month = months[originalDate.getMonth() - 1]
+                const year = originalDate.getFullYear();
+                switch(day % 10) {
+                    case 1:
+                        day = day + "st"
+                        break;
+                    case 2:
+                        day = day + "nd"
+                        break;
+                    case 3:
+                        day = day + "rd"
+                        break;
+                    default:
+                        day = day + "th"
+                        break;
+                }
+                document.date = `${day} of ${month} ${year}`
+            })
+            return res.status(200).json(response.data)
+        } catch (err) {
+            console.error(err)
+            return res.status(500).send("Failed to transmit data to client. Something went wrong on the server :(")
+        }
     });
 })
 

@@ -1,22 +1,35 @@
 <template>
 <div v-on:click="authenticateUser" id="sign-in">
-<div class="highlighted-bg">
+<div class="highlighted-bg" alt="sign-in button">
     <p>Sign In</p>
-    <p>{{loggedIn}}</p>
 </div>
 </div>
 </template>
 <script>
 import crypto from 'crypto'
 export default {
-    mounted() {
-        if(!this.$store.state.authInfo.loggedIn && $nuxt.$route.path != "/auth/signed-in") {
-            this.authenticateUser();
+    async mounted() {
+        if(this.$cookies.get("loggedInBefore") == true && !this.$store.state.authInfo.loggedIn && $nuxt.$route.path != "/auth/signed-in") {
+            try {
+                const token = this.$cookies.get("accessToken")
+                await this.$axios.get("http://localhost:3001/api/verifyAccessToken", {headers: {"Authorization": `Bearer ${token}`}}).then(res => {
+                    console.log("Token verified")
+                    this.getUserInfo(token, this).then((userInfo) => {
+                        this.putDataIntoStore(userInfo, true, token)
+                    }).catch(err => {
+                        console.log(err)
+                    });
+                }).catch(err => {
+                    console.log("Error happened")
+                    return this.authenticateUser();
+                })
+            } catch (err) {
+                return this.authenticateUser();
+            }
         }
     },
     computed: {
         loggedIn() {
-            console.log("Auth button says: " + this.$store.state.authInfo.loggedIn)
             return this.$store.state.authInfo.loggedIn
         }
     },
@@ -37,7 +50,8 @@ export default {
             const challenge = base64URLEncode(sha256(verifier));
             this.$store.commit('authInfo/addAuthChallenge', challenge)
             this.$store.commit('authInfo/addAuthVerifier', verifier)
-            this.$cookies.set('verifier', verifier, { sameSite: true, maxAge: 2 * 60 /* Cookie lasts 2 minutes */ })
+            this.$cookies.set('verifier', verifier, { path: "/", sameSite: true, maxAge: 2 * 60 /* Cookie lasts 2 minutes */, secure: true })
+            this.$cookies.set('currentPage', location.pathname, { path: "/", sameSite: true, maxAge: 2 * 60 /* Cookie lasts 2 minutes */, secure: true })
 
             const responseType = "code";
             const clientId = "BI1G7Qlow69cBRSJhfHMRJZZJWET2pGu";
@@ -48,6 +62,34 @@ export default {
             const url = `https://article-sharing-site.eu.auth0.com/authorize?response_type=${responseType}&client_id=${clientId}&scope=${scope}&audience=${audience}&redirect_uri=${redirectURI}&code_challenge_method=${codeChallengeMethod}&challenge=${challenge}`
             window.location.href = url
         },
+        getUserInfo(accessToken, thisObj) {
+            return new Promise((resolve, reject) => {
+                console.log("Getting user info")
+                // Using the access token (stored in cookies and also state), get user info from Auth0.
+                var options = {
+                    method: 'GET',
+                    url: 'https://article-sharing-site.eu.auth0.com/userinfo',
+                    headers: {
+                        "Authorization": `Bearer ${accessToken}`,
+                        "Content-Type": "application/json"
+                    }
+                };
+                thisObj.$axios.request(options).then(function (response) {
+                    resolve(response.data)
+                }).catch(function (error) {
+                    console.error("Error while getting user info")
+                    console.error(error);
+                    reject(error)
+                })
+            });
+        },
+        putDataIntoStore(userInfo, loggedIn, accessToken) {
+            this.$store.commit('authInfo/setUserInfo', userInfo)
+            this.$store.commit('authInfo/setLoggedIn', loggedIn)
+            this.$store.commit('authInfo/addAccessToken', accessToken)
+            this.$cookies.set("loggedInBefore", true, { sameSite: true, maxAge: 60 * 24 * 30, path: "/", secure: true})
+            this.$cookies.set("accessToken", accessToken, { sameSite: true, maxAge: 60 * 24, path: "/", secure: true})
+        }
     }
 }
 </script>

@@ -2,13 +2,13 @@
 <div id="titlebar-container">
     <div class="titlebar">
         <div id="main-navigation">
-            <TitlebarLogo />
-            <TitlebarButton href="/" title="Home"/>
-            <TitlebarButton href="/discover" title="Discover"/>
-            <TitlebarButton href="/write" title="Write"/>
-            <TitlebarButton href="/faq" title="FaQ"/>
+            <TitlebarLogo tabindex="-1" />
+            <TitlebarButton href="/" title="Home" tabindex="1" />
+            <TitlebarButton href="/discover" title="Discover" tabindex="2" />
+            <TitlebarButton href="/write" title="Write" tabindex="3" />
+            <TitlebarButton href="/faq" title="FaQ" tabindex="4" />
         </div>
-        <Profile />
+        <Profile tabindex="5" />
     </div>
     <div id="shadow" />
 </div>
