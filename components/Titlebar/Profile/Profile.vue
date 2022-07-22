@@ -17,10 +17,10 @@ export default {
     },
     computed: {
         username() {
-            return this.$store.state.authInfo.userInfo.nickname;
+            return this.$store.state.userProfile.profile.name;
         },
         profile_picture() {
-            return this.$store.state.authInfo.userInfo.picture;
+            return this.$store.state.userProfile.profile.picture;
         },
         logged_in() {
             return this.$store.state.authInfo.loggedIn
