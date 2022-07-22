@@ -1,0 +1,1 @@
+If everything worked out alright, this file should appear in the github repo. (Testing if I setup git on my MacBook alright)
