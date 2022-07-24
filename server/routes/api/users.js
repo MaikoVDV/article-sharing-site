@@ -23,29 +23,36 @@ router.get("/basicInfo/:userId", async (req, res) => {
         res.status(400).send(`Failed to find basic info about user with id: ${req.params.userId}`)
     })
 })
-router.get("/profile/:userId", (req, res) => {
+router.get("/profile/:userId", async (req, res) => {
     let done = false;
-    // const headers = {
-    //     "content-type": "application/json",
-    //     "apiKey": process.env.GRAPHQL_KEY
-    // };
-    // const graphqlQuery = {
-    //     "query": `
-    //     {
-    //         user(query: {userId: ${req.params.userId}}) {
-    //             username
-    //             profilePicture
-    //         }
-    //     }
-    //     `,
-    //     "variables": {}
-    // };
-    // axios({
-    //     url: process.env.GRAPHQL_ENDPOINT,
-    //     method: 'post',
-    //     headers: headers,
-    //     data: graphqlQuery
-    // })
+    const headers = {
+        "content-type": "application/json",
+        "apiKey": process.env.GRAPHQL_KEY
+    };
+    const graphqlQuery = {
+        "query": `
+        {
+            user(query: {userId: ${req.params.userId}}) {
+                username
+                profilePicture
+                linkedWebsite
+                writtenDocuments
+                starredDocuments
+                votedDocuments
+            }
+        }
+        `,
+        "variables": {}
+    };
+    axios({
+        url: process.env.GRAPHQL_ENDPOINT,
+        method: 'post',
+        headers: headers,
+        data: graphqlQuery
+    }).then((response, error) => {
+        
+    })
+    return
     User.findOne({userId: req.params.userId}).then((userDataResponse, userDataError) => {
 
         const userData = {
