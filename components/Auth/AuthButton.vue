@@ -20,10 +20,10 @@ export default {
                             this.putDataIntoStore(profile, true, token)
                         })
                     }).catch(err => {
-                        console.log(err)
+                        console.log("Failed to get user info")
                     });
                 }).catch(err => {
-                    console.log("Error happened")
+                    console.log("Failed to verify access token")
                     return this.authenticateUser();
                 })
             } catch (err) {

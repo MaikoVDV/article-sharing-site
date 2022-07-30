@@ -5,7 +5,40 @@ const axios = require("axios")
 const User = require("../../models/userSchema");
 const jwtCheck = require("../../protectedRoute")
 
+// Get a user's basic info (name and pfp)
 router.get("/basicInfo/:userId", async (req, res) => {
+    const headers = {
+        "content-type": "application/json",
+        "apiKey": process.env.GRAPHQL_KEY
+    };
+    const graphqlQuery = {
+        "query": `
+        {
+            user(query: {userId: "${req.params.userId.toString()}"}) {
+                username
+                profilePicture
+            }
+        }
+        `,
+        "variables": {}
+    };
+    axios({
+        url: process.env.GRAPHQL_ENDPOINT,
+        method: 'post',
+        headers: headers,
+        data: graphqlQuery
+    }).then(response => {
+        const user = response.data.data.user;
+        const responseData = {
+            username: user.username,
+            iconLink: user.profilePicture,
+        }
+        res.status(200).json(responseData)
+    }, error => {
+        console.log(error)
+        res.status(500).send("Failed to get basic information of user.")
+    })
+    return
     User.findOne({userId: req.params.userId}).then((userDataResponse, userDataError) => {
         const userData = {
             username: userDataResponse.username,
@@ -23,6 +56,7 @@ router.get("/basicInfo/:userId", async (req, res) => {
         res.status(400).send(`Failed to find basic info about user with id: ${req.params.userId}`)
     })
 })
+// Get a user's entire profile information.
 router.get("/profile/:userId", async (req, res) => {
     let done = false;
     const headers = {
@@ -32,7 +66,8 @@ router.get("/profile/:userId", async (req, res) => {
     const graphqlQuery = {
         "query": `
         {
-            user(query: {userId: ${req.params.userId}}) {
+            user(query: {userId: "${req.params.userId.toString()}"}) {
+                userId
                 username
                 profilePicture
                 linkedWebsite
@@ -49,8 +84,21 @@ router.get("/profile/:userId", async (req, res) => {
         method: 'post',
         headers: headers,
         data: graphqlQuery
-    }).then((response, error) => {
-        
+    }).then(response => {
+        const user = response.data.data.user;
+        const responseData = {
+            userId: user.userId,
+            username: user.username,
+            iconLink: user.profilePicture,
+            linkedWebsite: user.linkedWebsite,
+            writtenDocuments: user.writtenDocuments,
+            starredDocuments: user.starredDocuments,
+            votedDocuments: user.votedDocuments
+        }
+        res.status(200).json(responseData)
+    }, error => {
+        console.log(error);
+        res.status(500).send("Failed to get user profile.")
     })
     return
     User.findOne({userId: req.params.userId}).then((userDataResponse, userDataError) => {
