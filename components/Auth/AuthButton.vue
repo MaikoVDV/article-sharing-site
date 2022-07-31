@@ -11,24 +11,25 @@ export default {
     mixins: [authMixin],
     async mounted() {
         if(this.$cookies.get("loggedInBefore") == true && !this.$store.state.authInfo.loggedIn && $nuxt.$route.path != "/auth/signed-in") {
-            try {
-                const token = this.$cookies.get("accessToken")
-                await this.$axios.get("http://localhost:3001/api/verifyAccessToken", {headers: {"Authorization": `Bearer ${token}`}}).then(res => {
-                    console.log("Token verified")
-                    this.getUserInfo(token, this).then((userInfo) => {
-                        this.getProfile(userInfo.sub, this).then(profile => {
-                            this.putDataIntoStore(profile, true, token)
-                        })
-                    }).catch(err => {
-                        console.log("Failed to get user info")
-                    });
-                }).catch(err => {
-                    console.log("Failed to verify access token")
-                    return this.authenticateUser();
-                })
-            } catch (err) {
+            const token = this.$cookies.get("accessToken")
+            await this.$axios.get("http://localhost:3001/api/verifyAccessToken", {headers: {"Authorization": `Bearer ${token}`}}).then(res => {
+                this.getUserInfo(token, this).then((userInfo) => {
+                    // On success
+                    this.getProfile(userInfo.sub, this).then(profile => {
+                        this.putDataIntoStore(profile, true, token)
+                    })
+                }, err => {
+                    // On fail
+                    console.log("Failed to get user info")
+                    console.log(err)
+                });
+            }, err => {
+                // On fail
+                console.log("Failed to verify access token")
+                console.log(err)
                 return this.authenticateUser();
-            }
+            })
+            return this.authenticateUser();
         }
     },
     computed: {

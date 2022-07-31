@@ -33,7 +33,6 @@ export default {
             return new Promise ((resolve, reject) => {
                 // Using the Auth Code received earlier, get an access token, ID token and (optionally) a refresh token from Auth0.
                 const verifier = this.$cookies.get("verifier")
-                //console.log(query)
 
                 var options = {
                     method: 'POST',
@@ -58,7 +57,6 @@ export default {
         },
         getUserInfo(accessToken, thisObj) {
             return new Promise((resolve, reject) => {
-                console.log("Getting user info")
                 // Using the access token (stored in cookies and also state), get user info from Auth0.
                 var options = {
                     method: 'GET',
@@ -79,7 +77,6 @@ export default {
         },
         getProfile(userId, thisObj) {
             return new Promise((resolve, reject) => {
-                console.log("Getting profile")
                 // Using the access token (stored in cookies and also state), get user info from Auth0.
                 var options = {
                     method: 'GET',

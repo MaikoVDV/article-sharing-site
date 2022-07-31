@@ -91,3 +91,6 @@ sw.*
 
 # Super secret auth stuff
 /server/config
+
+# VS Code config
+.vscode
