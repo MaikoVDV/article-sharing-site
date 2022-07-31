@@ -189,11 +189,14 @@ export default {
             } catch (err) {
 
             }
-            this.$axios.post('http://localhost:3001/api/document', {
-                title: this.titleEditor.getText(), 
+            const article = {
+                authorId: this.$store.state.userProfile.profile.id,
+                title: this.titleEditor.getText(),
                 document: this.contentEditor.getHTML(),
-                authorId: this.$store.state.authInfo.userInfo.sub,
-                description: description
+                description: description,
+            }
+            this.$axios.post('http://localhost:3001/api/document', {
+                ...article
             }, {
                 headers: {
                     "Authorization": `Bearer ${this.$store.state.authInfo.accessToken}`

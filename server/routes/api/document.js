@@ -54,25 +54,23 @@ router.post("/", async (req, res) => {
         console.log(err)
         return res.status(507).send(err)
     }
-
     const document = new Document({
         title: req.body.title, // Title of the article, plaintext
         document: req.body.document, // The article itself, XML
-        description: req.body.description,
+        description: req.body.description, // If the article startes with a paragraph, this is set. To be displayed in article previews. Supports Bold, Italics and strikethrough.
         shortId: shortId, // A 12 digit number unique to the article, to be used in the URL in stead of the Mongo ObjectID because it's ugly.
-        authorId: req.body.authorId
+        authorId: req.body.authorId, // The id of the author
     })
     // NEEDS VERIFYING AND LIKE CYBERSECURITY STUFF YOU KNOW
-
-
     // Committing the article to the database
-    document.save().then((response, err) => {
-        if(err) {
-            console.log(err)
-            return res.err.send(err)
-        }
+    try {
+        await document.save()
         return res.send("Document posted!")
-    })
+    } catch(err) {
+        console.error("Failed to save document to database")
+        console.error(err);
+        return res.status(400).json({ error: "Failed to save document. Did you send correct data?", requestData: req.body })
+    }
 })
 // A function to find a unique ID (12-digit number) for an article
 async function findUniqueID() {

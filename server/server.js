@@ -1,16 +1,12 @@
 // Importing libraries
 const express = require('express')
 const mongoose = require('mongoose');
-const path = require('path');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const axios = require("axios")
 
 // Importing middleware
 // Getting the routes
-const testRoute = require('./routes/api/testRoute');
-const articleList = require('./routes/api/articleList');
-const write = require('./routes/api/write');
 const document = require('./routes/api/document');
 const documentList = require('./routes/api/documentList');
 const users = require('./routes/api/users');
@@ -40,16 +36,13 @@ mongoose.connect(db)
     .catch(err => console.log(err));
 
 // Using the routes
-app.use('/api/testRoute', testRoute);
-app.use('/api/articleList', articleList);
-app.use('/api/write', write);
 app.use('/api/document', document);
 app.use('/api/documentList', documentList);
 app.use('/api/users', users);
 app.use('/api/verifyAccessToken', verifyAccessToken)
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send("Git off ma property")
 })
 
 app.listen(port, () => {

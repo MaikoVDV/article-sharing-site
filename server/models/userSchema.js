@@ -25,15 +25,12 @@ const userSchema = new mongoose.Schema({
     },
     writtenDocuments: {
         type: [String],
-        default: ["Hello", "hi"]
     },
     starredDocuments: {
         type: [String],
-        default: ["Hello", "hi"]
     },
     votedDocuments: {
         type: [String],
-        default: ["Hello", "hi"]
     },
     settings: {
         showStarredDocuments: {
