@@ -19,7 +19,7 @@ export default {
                     //console.log("Getting profile info.")
                     await this.getProfile(userInfo.sub, this).then(async profile => {
                         console.log("Putting data into store.")
-                        //this.putDataIntoStore(profile, true, token)
+                        this.putDataIntoStore(profile, true, token)
                         return;
                     }, err => {
                         // On fail
