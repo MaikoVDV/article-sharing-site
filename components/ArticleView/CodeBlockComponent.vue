@@ -1,5 +1,5 @@
 <template>
-  <node-view-wrapper class="code-block" hi="5" ref="codeBlock">
+  <node-view-wrapper class="code-block" ref="codeBlock" spellcheck="false">
     <select contenteditable="false" v-model="selectedLanguage">
       <option :value="null">
         auto

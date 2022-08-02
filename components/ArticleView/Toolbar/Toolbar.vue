@@ -72,21 +72,9 @@ export default {
           action: () => this.editor.chain().focus().toggleStrike().run(),
           isActive: () => this.editor.isActive('strike'),
         },
-        // {
-        //   icon: 'Code-block', //<a href="https://www.flaticon.com/free-icons/coding" title="coding icons">Coding icons created by Kiranshastry - Flaticon</a>
-        //   title: 'Code',
-        //   action: () => this.editor.chain().focus().toggleCode().run(),
-        //   isActive: () => this.editor.isActive('code'),
-        // },
         {
           type: 'divider',
         },
-        // {
-        //   icon: 'Header-1', //<a href="https://www.flaticon.com/free-icons/heading" title="heading icons">Heading icons created by Icon Hubs - Flaticon</a>
-        //   title: 'Heading 1',
-        //   action: () => this.editor.chain().focus().toggleHeading({ level: 1 }).run(),
-        //   isActive: () => this.editor.isActive('heading', { level: 1 }),
-        // },
         {
           icon: 'Header-2', //<a href="https://www.flaticon.com/free-icons/heading" title="heading icons">Heading icons created by IconKanan - Flaticon</a>
           title: 'Heading 2',
@@ -150,6 +138,10 @@ export default {
     position: relative;
     .toolbar-button img {
       filter: brightness(0)
+    }
+    .divider {
+      height: 1rem;
+      background-color: $toolbar-button-color;
     }
   }
 </style>

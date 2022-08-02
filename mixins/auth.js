@@ -18,7 +18,7 @@ export default {
             this.$store.commit('authInfo/addAuthChallenge', challenge)
             this.$store.commit('authInfo/addAuthVerifier', verifier)
             this.$cookies.set('verifier', verifier, { path: "/", sameSite: true, maxAge: 2 * 60 /* Cookie lasts 2 minutes */, secure: true })
-            this.$cookies.set('currentPage', location.pathname, { path: "/", sameSite: true, maxAge: 2 * 60 /* Cookie lasts 2 minutes */, secure: true })
+            if(location.pathname != '/auth/signed-in') this.$cookies.set('currentPage', location.pathname, { path: "/", sameSite: true, maxAge: 2 * 60 /* Cookie lasts 2 minutes */, secure: true })
 
             const responseType = "code";
             const clientId = "BI1G7Qlow69cBRSJhfHMRJZZJWET2pGu";
