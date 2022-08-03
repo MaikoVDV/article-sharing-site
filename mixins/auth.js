@@ -75,15 +75,27 @@ export default {
                 })
             });
         },
-        getBasicUserInfo(userId, thisObj) {
+        getProfile(userId, thisObj) {
             return new Promise((resolve, reject) => {
                 // Using the access token (stored in cookies and also state), get user info from Auth0.
                 var options = {
                     method: 'GET',
-                    url: `http://localhost:3001/api/users/basicInfo/${userId}`
+                    url: `http://localhost:3001/api/users/profile/${userId}`
                 };
-                thisObj.$axios.request(options).then(function (response) {
-                    resolve(response.data)
+                thisObj.$axios.request(options).then(function (res) {
+                    
+                    const profileData = {
+                        userId: res.data.userId,
+                        username: res.data.username,
+                        iconLink: res.data.iconLink,
+                        linkedWebsite: res.data.linkedWebsite,
+                        date: res.data.date,
+                        writtenDocuments: res.data.writtenDocuments,
+                        starredDocuments: res.data.starredDocuments,
+                        votedDocuments: res.data.votedDocuments,
+                        settings: res.data.settings
+                    }
+                    resolve(profileData)
                 }).catch(function (error) {
                     console.error("Error while getting basic user info")
                     console.error(error);
@@ -92,7 +104,7 @@ export default {
             });
         },
         putDataIntoStore(profile, loggedIn, accessToken) {
-            this.$store.commit('userProfile/setProfile', profile)
+            this.$store.commit('userProfile/setFullProfile', profile)
             this.$store.commit('authInfo/setLoggedIn', loggedIn)
             this.$store.commit('authInfo/addAccessToken', accessToken)
             this.$cookies.set("loggedInBefore", true, { sameSite: true, maxAge: 60 * 24 * 30, path: "/", secure: true})

@@ -38,3 +38,4 @@ router.get("/user/:userId/writtenDocuments", async (req, res) => {
         res.status(500).send("Failed to get basic information of user.")
     })
 })
+// NOT SURE IF IM EVER GOING TO USE THIS ROUTE. THIS IS JUST BOILERPLATE, I THINK

@@ -1,8 +1,8 @@
 <template>
-<div>
-  <h1 class="page-title">Homepage</h1>
-  <p>pittig leeg</p>
-</div>
+  <div class="page-content">
+    <h1 class="page-title">Homepage</h1>
+    <p>pittig leeg</p>
+  </div>
 </template>
 
 <script>
@@ -13,3 +13,10 @@
     }
   }
 </script>
+<style lang="scss" scoped>
+@import "~/assets/scss/variables";
+@import "~/assets/scss/generalSettings";
+    .page-content {
+        @include pageContentCentered;
+    }
+</style>

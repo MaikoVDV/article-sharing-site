@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const axios = require("axios");
 const chalk = require("chalk")
+const { ConvertDate } = require("../../mixins/ConvertDate.js")
 
 const User = require("../../models/user.js")
 
@@ -37,23 +38,38 @@ router.get("/basicInfo/:userId", async (req, res) => {
             }
             res.status(200).json(responseData)
         } catch (err) {
-            if(response.data.data.user == null) {
-                return res.status(200).send(createNewUser(req.params.userId.toString()))
-                // console.error(chalk.red.bold("Error: ") + chalk.red("Failed to get basic user info. Returned null. Here's the error"))
-                // console.error(err)
-                // return res.status(400).send("User was not found. Have you entered the right user ID?")
+            catchErr()
+            async function catchErr() {
+                let done = false;
+                if(response.data.data.user == null) {
+                    await createNewUser(userId, res).then(data => {
+                        if(data?.error != undefined) {
+                            // Error occurred while trying to get data from Auth0.
+                            console.error(chalk.red(chalk.bold("Error: ") + "Failed to save user. They probably haven't logged in with Auth0 yet and a nonexistent ID was requested."))
+                            return res.status(400).send(`No profile with id ${userId} was found, and no profile could be created. Have you logged in yet?`)
+                        }
+                        done = true;
+                    })
+                }
+                if(done) return
+                console.error(chalk.red.bold("Failed to get a users basic info. Here's the error"))
+                console.error(err)
+                return res.status(400).send("User's basic info could not be found.")
             }
-            console.error(chalk.red.bold("Error: ") + chalk.red("Failed to get basic user info. Here's the error"))
-            console.error(err);
-            return res.status(400).send("User was not found. Have you entered the right user ID?")
         }
     }, error => {
-        console.log(error)
-        res.status(500).send("Failed to get basic information of user.")
+        try {
+            console.log(error)
+            //res.status(500).send("Failed to get basic information of user.")
+
+        } catch(err) {
+            console.log("caught")
+        }
     })
 })
 // Get a user's entire profile information.
 router.get("/profile/:userId", async (req, res) => {
+    const id = req.params.userId.toString();
     const headers = {
         "content-type": "application/json",
         "apiKey": process.env.GRAPHQL_KEY
@@ -61,7 +77,7 @@ router.get("/profile/:userId", async (req, res) => {
     const graphqlQuery = {
         "query": `
         {
-            user(query: {userId: "${req.params.userId.toString()}"}) {
+            user(query: {userId: "${id}"}) {
                 userId
                 username
                 profilePicture
@@ -69,6 +85,11 @@ router.get("/profile/:userId", async (req, res) => {
                 writtenDocuments
                 starredDocuments
                 votedDocuments
+                settings {
+                    showStarredDocuments
+                    showVotedDocuments
+                }
+                date
             }
         }
         `,
@@ -80,7 +101,6 @@ router.get("/profile/:userId", async (req, res) => {
         headers: headers,
         data: graphqlQuery
     }).then(response => {
-        console.log(response.data)
         try {
             const user = response.data.data.user;
             const responseData = {
@@ -90,128 +110,87 @@ router.get("/profile/:userId", async (req, res) => {
                 linkedWebsite: user.linkedWebsite,
                 writtenDocuments: user.writtenDocuments,
                 starredDocuments: user.starredDocuments,
-                votedDocuments: user.votedDocuments
+                votedDocuments: user.votedDocuments,
+                settings: user.settings,
+                date: ConvertDate(user.date)
             }
             res.status(200).json(responseData)
-        } catch(err) {
-            if(response.data.data.user == null) {
-                return res.status(200).send(createNewUser(req.params.userId.toString()))
-                
-                // console.error(chalk.red.bold("Error: ") + chalk.red("A user's profile was requested, but null was returned. The user probably hasn't signed up or a wrong ID was entered. Here's the error"))
-                // console.error(err)
-                // return res.status(400).send("User was not found. Have you entered the right user ID?")
+        } catch (err) {
+            catchErr()
+            async function catchErr() {
+                let done = false;
+                console.log(response.data)
+                if(response.data.data.user == null) {
+                    await createNewUser(id, res).then(data => {
+                        if(data?.error != undefined) {
+                            // Error occurred while trying to get data from Auth0.
+                            console.error(chalk.red(chalk.bold("Error: ") + "Failed to save user. They probably haven't logged in with Auth0 yet and a nonexistent ID was requested."))
+                            done = true;
+                            return res.status(400).send(`No profile with id ${id} was found, and no profile could be created. Have you logged in yet?`)
+                        }
+                    })
+                }
+                if(done) return
+                console.error(chalk.red.bold("Failed to get a users profile. Here's the error"))
+                console.error(err)
+                return res.status(400).send("User's profile could not be found.")
             }
-            console.error(chalk.red.bold("Failed to get a users profile. Here's the error"))
-            console.error(err)
-            return res.status(400).send("User's profile could not be found.")
         }
     }, error => {
         console.log(error);
-        res.status(500).send("Failed to get user profile.")
-    })
-    return
-    User.findOne({userId: req.params.userId}).then((userDataResponse, userDataError) => {
-
-        const userData = {
-            userId: userDataResponse.userId,
-            username: userDataResponse.username,
-            profilePicture: userDataResponse.profilePicture,
-            linkedWebsite: userDataResponse.linkedWebsite,
-            writtenDocuments: userDataResponse.writtenDocuments,
-            starredDocuments: userDataResponse.starredDocuments,
-            votedDocuments: userDataResponse.votedDocuments
-        }
-        console.log("Returning user data")
-        done = true
-        return res.status(200).send(userData)
-    }).catch(async userFindingError => {
-        console.log("Couldn't get user data.")
-        const userExists = await User.exists({userId: req.params.userId})
-        console.log("UserExists: " + userExists)
-        if(userExists == null) {
-            // User does not exists yet (in Mongo), so create one.
-            console.log("User does not exist. Creating new one.")
-            const auth0UserInfo = await requestUserInfo(req.params.userId)
-            const newUser = new User({
-                username: auth0UserInfo.nickname,
-                profilePicture: auth0UserInfo.picture,
-                email: auth0UserInfo.email,
-                userId: req.params.userId,
-            })
-            await newUser.save().then((response, userSavingError) => {
-                if(userSavingError) {
-                    console.error("Failed to save account data to Mongo");
-                    console.error(userSavingError)
-                    done = true
-                    return res.status(500).send("Failed to save account data :(")
-                }
-                //console.log(response)
-                done = true
-                const userData = {
-                    userId: response.userId,
-                    username: response.username,
-                    profilePicture: response.profilePicture,
-                    linkedWebsite: response.linkedWebsite,
-                    writtenDocuments: response.writtenDocuments,
-                    starredDocuments: response.starredDocuments,
-                    votedDocuments: response.votedDocuments
-                }
-                return res.status(200).send(userData)
-            })
-            
-            //return res.status(200).send("User does not exist. Do you want to sign up?")
-        }
-        if (!done) {
-            console.log("Error finding user data.")
-            console.log(userFindingError)
-            //return res.status(400).json({ err: userFindingError.toString() })
-            res.status(400).send(`Failed to find profile of user with id: ${req.params.userId}`)
-        }
+        //res.status(500).send("Failed to get user profile.")
     })
 })
-async function createNewUser(id) {
-    // User does not exists yet (in Mongo), so create one.
-    console.log("User does not exist. Creating new one.")
-    const auth0UserInfo = await requestUserInfo(id)
+async function createNewUser(id, res) {
+    // User does not exist yet (in Mongo), so create one.
+    console.log(chalk.greenBright("Creating a new user!"))
+    const auth0UserInfo = await requestUserInfo(id, res)
+    if(auth0UserInfo.status.code != "success") {
+        // Something went wrong finding user info.
+        return { error: auth0UserInfo.status.err }
+    }
     const newUser = new User({
-        username: auth0UserInfo.nickname,
-        profilePicture: auth0UserInfo.picture,
-        email: auth0UserInfo.email,
+        username: auth0UserInfo.data.nickname,
+        profilePicture: auth0UserInfo.data.picture,
+        email: auth0UserInfo.data.email,
         userId: id,
     })
     await newUser.save().then((response, userSavingError) => {
         if(userSavingError) {
-            console.error("Failed to save account data to Mongo");
+            console.error(chalk.red(chalk.bold("Error: ") + "Failed to save account data to Mongo. Here's the error"));
             console.error(userSavingError)
             return res.status(500).send("Failed to save account data :(")
         }
         const userData = {
             userId: response.userId,
             username: response.username,
-            profilePicture: response.profilePicture,
+            iconLink: response.profilePicture,
             linkedWebsite: response.linkedWebsite,
             writtenDocuments: response.writtenDocuments,
             starredDocuments: response.starredDocuments,
-            votedDocuments: response.votedDocuments
+            votedDocuments: response.votedDocuments,
+            date: response.date,
         }
-        return userData;
+        return res.status(200).send(userData)
     })
 }
-async function requestUserInfo(id) {
+async function requestUserInfo(id, res) {
+    let status = { code: "success", err: undefined };
     const requestConfig = {
         headers: {
             'Authorization': `Bearer ${managementKey}`
           }
     }
     let responseData = {}
-    await axios.get(`https://article-sharing-site.eu.auth0.com/api/v2/users/${id}`, requestConfig).then((response) => {
-        responseData = response.data
+    await axios.get(`https://article-sharing-site.eu.auth0.com/api/v2/users/${id}`, requestConfig).then((userProfile) => {
+        responseData = userProfile.data
     }).catch(err => {
-        console.error("Couldn't find user info in Auth0 database.")
+        console.error(chalk.red(chalk.bold("Error: ") + "Couldn't find user info in Auth0 database. Here's the error:"))
         console.error(err.response.data);
-        return res.status(400).send(`Failed to find information from user with id: ${id}`)
+        status = { code: 400, err: err.response.data }
+        //res.status(400).send(`Failed to find information from user with id: ${id}`)
     });
-    return responseData
+    return { data: responseData, status: status }
 }
 
 module.exports = router

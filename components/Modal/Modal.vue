@@ -29,39 +29,6 @@ export default {
             return this.$store.state.modal.modalData.options.filter(option => option.type != "TextInput")
         }
     },
-    methods: {
-        showModal: function () {
-            const that = this;
-            const options = [
-                {
-                    text: "Text option 1",
-                    type: "TextInput",
-                    action: null
-                },
-                {
-                    text: "Text option 2",
-                    type: "TextInput",
-                    action: null
-                },
-                {
-                    text: "Button 1",
-                    type: "Cancel",
-                    action: function() { that.removeModal() }
-                },
-                {
-                    text: "Button 2",
-                    type: "Confirm",
-                    action: function() { console.log("Clicked!") }
-                },
-                {
-                    text: "Button 3",
-                    type: "Danger",
-                    action: function() { console.log("Clicked!") }
-                }
-            ];
-            this.createModal("Title", "Description", options);
-        }
-    },
     components: { TextInput }
 }
 </script>
@@ -90,13 +57,14 @@ export default {
         align-items: center;
 
         p {
+            text-align: center;
             margin: 0px;
             &.modal-title {
                 font-size: 36px;
                 font-weight: 500;
             }
             &.modal-desc {
-                font-size: 24px;
+                font-size: 20px;
                 font-weight: 350;
             }
         }
