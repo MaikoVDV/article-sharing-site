@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const axios = require("axios");
-const config = require("config");
-
 // @route  Get api/articleList
 // @desc   Get all articles
 // @access Public

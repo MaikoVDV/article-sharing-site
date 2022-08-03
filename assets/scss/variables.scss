@@ -8,8 +8,11 @@ $titlebar-bg-color: #FFF;
 $titlebar-font-size: 1rem;
 $titlebar-thickness: 4rem;
 // Titlebar buttons
-$titlebar-button-border: 1px solid #888888;
+$titlebar-button-border: 1px solid #888;
 $titlebar-button-horizontal-padding: 2rem;
+// Profile
+$titlebar-profile-border-color: #DDD;
+$titlebar-profile-bg-hover: #EEE;
 
 // Z-Indices
 $z-index-titlebar: 50;
@@ -41,7 +44,7 @@ $article-code-text-color: black;
 
 // Border-radii
 $border-radius-large: 10px;
-$border-radus-small: 5px;
+$border-radius-small: 5px;
 
 // Horizontal button bar
 $buttonbar-bg-color: #000055;

@@ -75,17 +75,17 @@ export default {
                 })
             });
         },
-        getProfile(userId, thisObj) {
+        getBasicUserInfo(userId, thisObj) {
             return new Promise((resolve, reject) => {
                 // Using the access token (stored in cookies and also state), get user info from Auth0.
                 var options = {
                     method: 'GET',
-                    url: `http://localhost:3001/api/users/profile/${userId}`
+                    url: `http://localhost:3001/api/users/basicInfo/${userId}`
                 };
                 thisObj.$axios.request(options).then(function (response) {
                     resolve(response.data)
                 }).catch(function (error) {
-                    console.error("Error while getting profile")
+                    console.error("Error while getting basic user info")
                     console.error(error);
                     reject(error)
                 })

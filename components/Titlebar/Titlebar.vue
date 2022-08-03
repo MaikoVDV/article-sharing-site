@@ -20,7 +20,7 @@ export default {
     components: {
         AuthButton,
         Profile,
-    }
+    },
 }
 </script>
 <style scoped lang="scss">
@@ -37,7 +37,6 @@ export default {
         width: 100%;
         height: $titlebar-thickness;
         position: fixed !important;
-        padding: 0px 1rem;
         box-sizing: border-box;
         @include noOffsets;
 
@@ -46,7 +45,8 @@ export default {
         font-size: $titlebar-font-size;
 
         // Text-styling
-        font-family: 'Lato', Arial, sans-serif;
+        font-weight: 500;
+        font-size: 1.1rem;
 
         @include horizontal-flexbox;
         justify-content: space-between;
@@ -55,6 +55,7 @@ export default {
         @include horizontal-flexbox;
         width: max-content;
         height: 100%;
+        padding-left: 1rem;
     }
     #shadow {
         background-image: linear-gradient(to bottom, #00000033, transparent);

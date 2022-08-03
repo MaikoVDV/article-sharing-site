@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const axios = require("axios")
+const axios = require("axios");
+const chalk = require("chalk")
 
-const User = require("../../models/userSchema");
-const jwtCheck = require("../../protectedRoute")
+const User = require("../../models/user.js")
 
 // Get a user's basic info (name and pfp)
 router.get("/basicInfo/:userId", async (req, res) => {
+    const userId = req.params.userId.toString();
     const headers = {
         "content-type": "application/json",
         "apiKey": process.env.GRAPHQL_KEY
@@ -14,7 +15,7 @@ router.get("/basicInfo/:userId", async (req, res) => {
     const graphqlQuery = {
         "query": `
         {
-            user(query: {userId: "${req.params.userId.toString()}"}) {
+            user(query: {userId: "${userId}"}) {
                 username
                 profilePicture
             }
@@ -28,37 +29,31 @@ router.get("/basicInfo/:userId", async (req, res) => {
         headers: headers,
         data: graphqlQuery
     }).then(response => {
-        const user = response.data.data.user;
-        const responseData = {
-            username: user.username,
-            iconLink: user.profilePicture,
+        try {
+            const user = response.data.data.user;
+            const responseData = {
+                username: user.username,
+                iconLink: user.profilePicture,
+            }
+            res.status(200).json(responseData)
+        } catch (err) {
+            if(response.data.data.user == null) {
+                return res.status(200).send(createNewUser(req.params.userId.toString()))
+                // console.error(chalk.red.bold("Error: ") + chalk.red("Failed to get basic user info. Returned null. Here's the error"))
+                // console.error(err)
+                // return res.status(400).send("User was not found. Have you entered the right user ID?")
+            }
+            console.error(chalk.red.bold("Error: ") + chalk.red("Failed to get basic user info. Here's the error"))
+            console.error(err);
+            return res.status(400).send("User was not found. Have you entered the right user ID?")
         }
-        res.status(200).json(responseData)
     }, error => {
         console.log(error)
         res.status(500).send("Failed to get basic information of user.")
     })
-    return
-    User.findOne({userId: req.params.userId}).then((userDataResponse, userDataError) => {
-        const userData = {
-            username: userDataResponse.username,
-            iconLink: userDataResponse.profilePicture
-        }
-        return res.status(200).send(userData)
-    }).catch(async userFindingError => {
-        const userExists = await User.exists({userId: req.params.userId})
-        if(userExists == null) {
-            return res.status(200).send("User does not exist.")
-        }
-        console.log("Error finding user data.")
-        console.log(userFindingError)
-        //return res.status(400).json({ err: userFindingError.toString() })
-        res.status(400).send(`Failed to find basic info about user with id: ${req.params.userId}`)
-    })
 })
 // Get a user's entire profile information.
 router.get("/profile/:userId", async (req, res) => {
-    let done = false;
     const headers = {
         "content-type": "application/json",
         "apiKey": process.env.GRAPHQL_KEY
@@ -85,17 +80,31 @@ router.get("/profile/:userId", async (req, res) => {
         headers: headers,
         data: graphqlQuery
     }).then(response => {
-        const user = response.data.data.user;
-        const responseData = {
-            userId: user.userId,
-            username: user.username,
-            iconLink: user.profilePicture,
-            linkedWebsite: user.linkedWebsite,
-            writtenDocuments: user.writtenDocuments,
-            starredDocuments: user.starredDocuments,
-            votedDocuments: user.votedDocuments
+        console.log(response.data)
+        try {
+            const user = response.data.data.user;
+            const responseData = {
+                userId: user.userId,
+                username: user.username,
+                iconLink: user.profilePicture,
+                linkedWebsite: user.linkedWebsite,
+                writtenDocuments: user.writtenDocuments,
+                starredDocuments: user.starredDocuments,
+                votedDocuments: user.votedDocuments
+            }
+            res.status(200).json(responseData)
+        } catch(err) {
+            if(response.data.data.user == null) {
+                return res.status(200).send(createNewUser(req.params.userId.toString()))
+                
+                // console.error(chalk.red.bold("Error: ") + chalk.red("A user's profile was requested, but null was returned. The user probably hasn't signed up or a wrong ID was entered. Here's the error"))
+                // console.error(err)
+                // return res.status(400).send("User was not found. Have you entered the right user ID?")
+            }
+            console.error(chalk.red.bold("Failed to get a users profile. Here's the error"))
+            console.error(err)
+            return res.status(400).send("User's profile could not be found.")
         }
-        res.status(200).json(responseData)
     }, error => {
         console.log(error);
         res.status(500).send("Failed to get user profile.")
@@ -160,7 +169,34 @@ router.get("/profile/:userId", async (req, res) => {
         }
     })
 })
-
+async function createNewUser(id) {
+    // User does not exists yet (in Mongo), so create one.
+    console.log("User does not exist. Creating new one.")
+    const auth0UserInfo = await requestUserInfo(id)
+    const newUser = new User({
+        username: auth0UserInfo.nickname,
+        profilePicture: auth0UserInfo.picture,
+        email: auth0UserInfo.email,
+        userId: id,
+    })
+    await newUser.save().then((response, userSavingError) => {
+        if(userSavingError) {
+            console.error("Failed to save account data to Mongo");
+            console.error(userSavingError)
+            return res.status(500).send("Failed to save account data :(")
+        }
+        const userData = {
+            userId: response.userId,
+            username: response.username,
+            profilePicture: response.profilePicture,
+            linkedWebsite: response.linkedWebsite,
+            writtenDocuments: response.writtenDocuments,
+            starredDocuments: response.starredDocuments,
+            votedDocuments: response.votedDocuments
+        }
+        return userData;
+    })
+}
 async function requestUserInfo(id) {
     const requestConfig = {
         headers: {

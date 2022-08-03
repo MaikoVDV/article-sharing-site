@@ -11,7 +11,6 @@
             <Button v-for="(option, index) in buttonOptions" :key="index" :text="option.text" :type="option.type" :onClick="option.action" />
         </div>
     </div>
-    <button class="sdghsdlgh" v-on:click="showModal()">Show!</button>
 </div>
 </template>
 <script>

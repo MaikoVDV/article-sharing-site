@@ -1,9 +1,10 @@
 // Importing libraries
-const express = require('express')
-const mongoose = require('mongoose');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const axios = require("axios")
+const express = require('express'); // Handles incoming requests
+const mongoose = require('mongoose'); // Middleware for connecting to Mongo
+const cors = require('cors'); // Grr CORS
+const dotenv = require('dotenv'); // Used for accessing secure configuration info
+const axios = require("axios") // Used for making requests to Auth0
+const chalk = require("chalk"); // Used for styling output in terminal
 
 // Importing middleware
 // Getting the routes
@@ -32,7 +33,7 @@ const db = process.env.MONGO_URI;
 
 // Connecting to database
 mongoose.connect(db)
-    .then(() => console.log("Connected to database"))
+    .then((res) => console.log(chalk.white(`Connected to database ${chalk.blue.bold(res.connection.name)} at ${chalk.blue.bold(res.connection.host)}:${chalk.blue.bold(res.connection.port)}`)))
     .catch(err => console.log(err));
 
 // Using the routes

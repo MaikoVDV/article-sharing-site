@@ -13,7 +13,6 @@ export default {
     },
     computed: {
         action() {
-            console.log(this.onClick)
             if(this.onClick == null) {
                 return function() {}
             }

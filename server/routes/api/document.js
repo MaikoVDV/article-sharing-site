@@ -4,9 +4,6 @@ var { customAlphabet } = require("nanoid")
 const nanoid = customAlphabet('0123456789', 12)
 const axios = require("axios")
 
-// Article model
-const Document = require("../../models/document");
-
 router.get("/:articleId", (req, res) => { // Route to get an article (shown in client at /article/{shortId})
     var articleId = Number(req.params.articleId)
     if(!Number.isInteger(articleId) || articleId < 0 || articleId > 999999999999) {

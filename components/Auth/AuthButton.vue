@@ -17,7 +17,7 @@ export default {
                 await this.getUserInfo(token, this).then(async (userInfo) => {
                     // On success
                     //console.log("Getting profile info.")
-                    await this.getProfile(userInfo.sub, this).then(async profile => {
+                    await this.getBasicUserInfo(userInfo.sub, this).then(async profile => {
                         console.log("Putting data into store.")
                         this.putDataIntoStore(profile, true, token)
                         return;

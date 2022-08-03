@@ -14,7 +14,7 @@ export default {
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
         { rel: 'stylesheet', href: "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/atom-one-light.min.css" }, // Code highlighting stylesheet
-        { rel: 'stylesheet', href: "https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700" } // Monospace code font
+        { rel: 'stylesheet', href: "https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700" }, // Monospace code font
       ],
       // script: [
       //   { src: "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"}
