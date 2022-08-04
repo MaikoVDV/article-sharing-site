@@ -14,7 +14,7 @@ export default {
         var that = this
         this.getAccessToken().then((accessToken) => {
             this.getUserInfo(accessToken, that).then((userInfo) => {
-                this.getBasicUserInfo(userInfo.sub, this).then(profile => {
+                this.getProfile(userInfo.sub, this).then(profile => {
                     this.putDataIntoStore(profile, true, accessToken)
                     this.$router.push(this.$cookies.get("currentPage"))
                 })

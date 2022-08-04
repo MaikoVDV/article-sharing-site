@@ -61,7 +61,6 @@ export default {
 @import "~/assets/scss/generalSettings";
     .page-content {
         @include pageContentCentered;
-        height: 100%;
         .settings {
             // Pretty much the whole page except the title
             display: flex;
