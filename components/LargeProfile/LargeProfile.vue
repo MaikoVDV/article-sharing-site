@@ -36,12 +36,13 @@ export default {
     flex-direction: row;
     height: $profile-large-height;
     width: 100%;
+    margin-bottom: $profile-default-margin;
 
     img {
         @include rounded-icon;
         height: $profile-large-height;
         width: $profile-large-height;
-        margin-right: 2rem;
+        margin-right: $profile-default-margin;
     }
     .profile-info-display {
         display: flex;

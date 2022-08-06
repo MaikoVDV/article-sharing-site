@@ -1,16 +1,10 @@
 <template>
   <div class="page-content">
     <h1 class="page-title"><br/></h1>
-    <div class="settings">
-        <div class="navbar-container">
-            <VerticalNavbar ref="profile-page-navbar" :buttons="pages" />
-        </div>
-        <div class="profile-info">
-            <LargeProfile />
-            Settings n documents n stuff
-        </div>
+        <LargeProfile class="large-profile-display" />
+        <HorizontalNavbar class="horizontal-navbar" ref="profile-page-navbar" :buttons="pages" />
+        Content!
     </div>
-  </div>
 </template>
 
 <script>
@@ -61,21 +55,15 @@ export default {
 @import "~/assets/scss/generalSettings";
     .page-content {
         @include pageContentCentered;
-        .settings {
-            // Pretty much the whole page except the title
-            display: flex;
-            flex-direction: row;
-            height: 100%;
+        // Pretty much the whole page except the title
+        height: 100%;
 
-            .navbar-container {
-                width: 25%;
-            }
-            .profile-info {
-                display: flex;
-                flex-direction: column;
-                width: 75%;
-                height: 100%;
-            }
+        .navbar-container {
+            width: 25%;
+        }
+        .horizontal-navbar,
+        .large-profile-display {
+            margin-bottom: $profile-default-margin;
         }
     }
 

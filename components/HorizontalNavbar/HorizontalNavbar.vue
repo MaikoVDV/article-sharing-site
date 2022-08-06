@@ -1,5 +1,5 @@
 <template>
-  <div class="vertical-navbar">
+  <div class="horizontal-navbar">
     <button v-for="button in buttons" :key="button.code" v-on:click="updateSelected(button.code)" :class="(currentlySelected == button.code) ? 'is-active' : ''">
         <p>
             {{button.text}}
@@ -30,9 +30,9 @@ export default {
 <style lang="scss" scoped>
 @import "~/assets/scss/variables";
 @import "~/assets/scss/generalSettings";
-.vertical-navbar {
+.horizontal-navbar {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     
     button {
         width: 7rem;
@@ -45,10 +45,10 @@ export default {
 
         &:first-child {
             border-top-left-radius: $v-navbar-button-radius;
-            border-top-right-radius: $v-navbar-button-radius;
+            border-bottom-left-radius: $v-navbar-button-radius;
         }
         &:last-child {
-            border-bottom-left-radius: $v-navbar-button-radius;
+            border-top-right-radius: $v-navbar-button-radius;
             border-bottom-right-radius: $v-navbar-button-radius;
         }
         &.is-active,
