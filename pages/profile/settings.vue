@@ -1,16 +1,27 @@
 <template>
-  <div class="page-content">
-    <h1 class="page-title"><br/></h1>
+    <div class="page-content">
+        <h1 class="page-title"><br/></h1>
         <LargeProfile class="large-profile-display" />
         <HorizontalNavbar class="horizontal-navbar" ref="profile-page-navbar" :buttons="pages" />
-        Content!
+        <Settings v-if="horizontalNavbar && horizontalNavbar.currentlySelected == 'settings'" />
+        <Written v-if="horizontalNavbar && horizontalNavbar.currentlySelected == 'written'" />
+        <Starred v-if="horizontalNavbar && horizontalNavbar.currentlySelected == 'starred'" />
     </div>
 </template>
 
 <script>
 import Modal from '~/mixins/modal.js'
+import Settings from '~/components/ProfileSections/Settings.vue'
+import Written from '~/components/ProfileSections/Written.vue'
+import Starred from '~/components/ProfileSections/Starred.vue'
+
 export default {
     mixins: [Modal],
+    components: {
+        Settings,
+        Written,
+        Starred,
+    },
     async mounted() {
         const that = this;
         if(!this.$store.state.authInfo.loggedIn && this.$cookies.get("loggedInBefore") != true) {
@@ -23,11 +34,12 @@ export default {
                 ]
             )
         }
+        this.horizontalNavbar = this.$refs["profile-page-navbar"];
     },
     computed: {
         profile() {
             return this.$store.getters.profile
-        }
+        },
     },
     data() {
         return {
@@ -44,9 +56,10 @@ export default {
                     text: "Starred Articles",
                     code: "starred"
                 },
-            ]
+            ],
+            horizontalNavbar: null
         }
-    }
+    },
 }
 </script>
 
