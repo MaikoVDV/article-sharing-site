@@ -1,5 +1,5 @@
 <template>
-    <NuxtLink to="/profile/settings" v-if="logged_in" id="profile-container">
+    <NuxtLink to="/profile" v-if="logged_in" id="profile-container">
         <ProfileText :name="username" />
         <ProfileIcon :picture="profile_picture" />
     </NuxtLink>

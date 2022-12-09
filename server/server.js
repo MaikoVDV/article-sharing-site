@@ -8,7 +8,7 @@ const chalk = require("chalk"); // Used for styling output in terminal
 
 // Importing middleware
 // Getting the routes
-const document = require('./routes/api/document');
+const document = require('./routes/api/document.js');
 const documentList = require('./routes/api/documentList');
 const users = require('./routes/api/users');
 const verifyAccessToken = require('./routes/api/verifyAccessToken');
@@ -47,7 +47,7 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`Server listening on port ${port}`)
 })
 // Get an access token to communicate with the Auth0 management API. The token expires every x seconds, so it needs to be refreshed periodically.
 const accessTokenRequestConfig = {

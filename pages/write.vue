@@ -12,9 +12,10 @@
 </template>
 
 <script>
+//import htmlToJson from 'html-to-json'
 import { Editor, EditorContent, VueNodeViewRenderer } from '@tiptap/vue-2'
 import { Extension } from '@tiptap/core'
-import { generateHTML } from '@tiptap/html'
+//import { generateHTML } from '@tiptap/html'
 import StarterKit from '@tiptap/starter-kit'
 import TaskList from '@tiptap/extension-task-list'
 import TaskItem from '@tiptap/extension-task-item'
@@ -165,30 +166,37 @@ export default {
     },
     methods: {
         submitArticle: function() {
+            return;
+            console.log(this.contentEditor.getText({blockSeparator: "\n"}));
+            let jsonDoc = htmlToJson.parse(this.contentEditor.getHTML()).then(res => {
+                console.log(res)
+            })
+
             const editorContent = this.contentEditor.getJSON()
             let description = "";
-            try {
-                if(editorContent.content[0].type == "paragraph") {
-                    description = generateHTML(editorContent.content[0], [
-                        StarterKit.configure({
-                            blockquote: false,
-                            bulletList: false,
-                            codeBlock: false,
-                            hardBreak: false,
-                            heading: false,
-                            horizontalRule: false,
-                            listItem: false,
-                            orderedList: false,
-                            code: false,
-                            dropcursor: false,
-                            gapcursor: false,
-                            history: false
-                        })
-                    ])
-                }
-            } catch (err) {
+            return;
+            // try {
+            //     if(editorContent.content[0].type == "paragraph") {
+            //         description = generateHTML(editorContent.content[0], [
+            //             StarterKit.configure({
+            //                 blockquote: false,
+            //                 bulletList: false,
+            //                 codeBlock: false,
+            //                 hardBreak: false,
+            //                 heading: false,
+            //                 horizontalRule: false,
+            //                 listItem: false,
+            //                 orderedList: false,
+            //                 code: false,
+            //                 dropcursor: false,
+            //                 gapcursor: false,
+            //                 history: false
+            //             })
+            //         ])
+            //     }
+            // } catch (err) {
 
-            }
+            // }
             const article = {
                 authorId: this.$store.state.userProfile.profile.id,
                 title: this.titleEditor.getText(),

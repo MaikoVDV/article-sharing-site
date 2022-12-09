@@ -35,25 +35,25 @@ export default {
     flex-direction: row;
     
     button {
-        width: 7rem;
-        height: 3rem;
-        background-color: $v-navbar-button-bg;
+        width: $profile-navbar-button-width;
+        height: $profile-navbar-button-height;
+        background-color: $profile-navbar-button-bg;
         border: none;
 
         transition: background-color 0.2s;
         transition-timing-function: ease-out;
 
         &:first-child {
-            border-top-left-radius: $v-navbar-button-radius;
-            border-bottom-left-radius: $v-navbar-button-radius;
+            border-top-left-radius: $profile-navbar-button-radius;
+            border-bottom-left-radius: $profile-navbar-button-radius;
         }
         &:last-child {
-            border-top-right-radius: $v-navbar-button-radius;
-            border-bottom-right-radius: $v-navbar-button-radius;
+            border-top-right-radius: $profile-navbar-button-radius;
+            border-bottom-right-radius: $profile-navbar-button-radius;
         }
         &.is-active,
         &:hover { // Animating hover
-            background-color: $v-navbar-button-bg-hover;
+            background-color: $profile-navbar-button-bg-hover;
         }
     }
 }

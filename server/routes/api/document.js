@@ -4,6 +4,8 @@ var { customAlphabet } = require("nanoid")
 const nanoid = customAlphabet('0123456789', 12)
 const axios = require("axios")
 
+const Document = require("../../models/document.js")
+
 router.get("/:articleId", (req, res) => { // Route to get an article (shown in client at /article/{shortId})
     var articleId = Number(req.params.articleId)
     if(!Number.isInteger(articleId) || articleId < 0 || articleId > 999999999999) {
@@ -44,6 +46,9 @@ router.get("/:articleId", (req, res) => { // Route to get an article (shown in c
 
 // User submits article to server, which saves it to the database.
 router.post("/", async (req, res) => {
+    if(req.body.authorId == undefined || typeof req.body.authorId !== "string") {
+        return res.status(401).send("Failed to submit document. Please log in.")
+    }
     // Generating an ID that is unique to the article
     const shortId = await findUniqueID()
     if(shortId == null) {

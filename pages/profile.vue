@@ -11,7 +11,7 @@
 
 <script>
 import Modal from '~/mixins/modal.js'
-import Settings from '~/components/ProfileSections/Settings.vue'
+import Settings from '~/components/ProfileSections/Settings/Settings.vue'
 import Written from '~/components/ProfileSections/Written.vue'
 import Starred from '~/components/ProfileSections/Starred.vue'
 
