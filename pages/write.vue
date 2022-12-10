@@ -166,44 +166,42 @@ export default {
     },
     methods: {
         submitArticle: function() {
-            return;
             console.log(this.contentEditor.getText({blockSeparator: "\n"}));
-            let jsonDoc = htmlToJson.parse(this.contentEditor.getHTML()).then(res => {
-                console.log(res)
-            })
+            // let jsonDoc = htmlToJson.parse(this.contentEditor.getHTML()).then(res => {
+            //     console.log(res)
+            // })
 
             const editorContent = this.contentEditor.getJSON()
             let description = "";
-            return;
-            // try {
-            //     if(editorContent.content[0].type == "paragraph") {
-            //         description = generateHTML(editorContent.content[0], [
-            //             StarterKit.configure({
-            //                 blockquote: false,
-            //                 bulletList: false,
-            //                 codeBlock: false,
-            //                 hardBreak: false,
-            //                 heading: false,
-            //                 horizontalRule: false,
-            //                 listItem: false,
-            //                 orderedList: false,
-            //                 code: false,
-            //                 dropcursor: false,
-            //                 gapcursor: false,
-            //                 history: false
-            //             })
-            //         ])
-            //     }
-            // } catch (err) {
+            try {
+                if(editorContent.content[0].type == "paragraph") {
+                    description = generateHTML(editorContent.content[0], [
+                        StarterKit.configure({
+                            blockquote: false,
+                            bulletList: false,
+                            codeBlock: false,
+                            hardBreak: false,
+                            heading: false,
+                            horizontalRule: false,
+                            listItem: false,
+                            orderedList: false,
+                            code: false,
+                            dropcursor: false,
+                            gapcursor: false,
+                            history: false
+                        })
+                    ])
+                }
+            } catch (err) {
 
-            // }
+            }
             const article = {
                 authorId: this.$store.state.userProfile.profile.id,
                 title: this.titleEditor.getText(),
                 document: this.contentEditor.getHTML(),
                 description: description,
             }
-            this.$axios.post('http://localhost:3001/api/document', {
+            this.$axios.post('https://article-sharing-site-server.onrender.com/api/document', {
                 ...article
             }, {
                 headers: {
