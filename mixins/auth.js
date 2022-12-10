@@ -24,7 +24,7 @@ export default {
             const clientId = "BI1G7Qlow69cBRSJhfHMRJZZJWET2pGu";
             const scope = "openid profile email offline_access";
             const audience = "http://localhost:3001";
-            const redirectURI = "http://localhost:3000/auth/signed-in";
+            const redirectURI = location.host + "/auth/signed-in";
             const codeChallengeMethod = "S256";
             const url = `https://article-sharing-site.eu.auth0.com/authorize?response_type=${responseType}&client_id=${clientId}&scope=${scope}&audience=${audience}&redirect_uri=${redirectURI}&code_challenge_method=${codeChallengeMethod}&challenge=${challenge}`
             window.location.href = url
