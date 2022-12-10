@@ -47,7 +47,7 @@ export default {
     },
     async fetch() {
         // Get the author's name and profile picture
-        const res = await this.$axios.$get(`http://localhost:3001/api/users/basicInfo/${this.document.authorId}`).catch(err => {
+        const res = await this.$axios.$get(`http://article-sharing-site-server.onrender.com/api/users/basicInfo/${this.document.authorId}`).catch(err => {
             console.log("Err trying to fetch author data")
             return console.error(err)
         })

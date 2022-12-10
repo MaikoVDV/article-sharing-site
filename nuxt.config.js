@@ -20,7 +20,11 @@ export default {
       //   { src: "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"}
       // ]
     },
-  
+    runtimeConfig: {
+      public: {
+        apiBase: 'http://article-sharing-site-server.onrender.com/api'
+      }
+    },
     // Global CSS: https://go.nuxtjs.dev/config-css
     css: [
         "~/assets/scss/articleview.scss",

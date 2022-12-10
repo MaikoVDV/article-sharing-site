@@ -23,7 +23,7 @@ export default {
             const responseType = "code";
             const clientId = "BI1G7Qlow69cBRSJhfHMRJZZJWET2pGu";
             const scope = "openid profile email offline_access";
-            const audience = "http://localhost:3001";
+            const audience = "http://article-sharing-site-server.onrender.com/api";
             const redirectURI = "http://localhost:3000/auth/signed-in";
             const codeChallengeMethod = "S256";
             const url = `https://article-sharing-site.eu.auth0.com/authorize?response_type=${responseType}&client_id=${clientId}&scope=${scope}&audience=${audience}&redirect_uri=${redirectURI}&code_challenge_method=${codeChallengeMethod}&challenge=${challenge}`
@@ -80,7 +80,7 @@ export default {
                 // Using the access token (stored in cookies and also state), get user info from Auth0.
                 var options = {
                     method: 'GET',
-                    url: `http://localhost:3001/api/users/profile/${userId}`
+                    url: `http://article-sharing-site-server.onrender.com/api/users/profile/${userId}`
                 };
                 thisObj.$axios.request(options).then(function (res) {
                     
