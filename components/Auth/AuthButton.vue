@@ -14,7 +14,7 @@ export default {
         if(this.$cookies.get("loggedInBefore") == true) {
             if(!this.$store.state.authInfo.loggedIn) {
                 const token = this.$cookies.get("accessToken")
-                await this.$axios.get("http://article-sharing-site-server.onrender.com/api/verifyAccessToken", {headers: {"Authorization": `Bearer ${token}`}}).then(async () => {
+                await this.$axios.get("https://article-sharing-site-server.onrender.com/api/verifyAccessToken", {headers: {"Authorization": `Bearer ${token}`}}).then(async () => {
                     await this.getUserInfo(token, this).then(async (userInfo) => {
                         // On success
                         await this.getProfile(userInfo.sub, this).then(async profile => {

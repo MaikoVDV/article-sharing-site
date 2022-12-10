@@ -66,7 +66,7 @@ export default {
         // ArticleID: string to identify the article
         // Article Title: string for users to identify the URL easier (optional)
 
-        const res = await $axios.$get(`http://article-sharing-site-server.onrender.com/api/document/${params.articleId}`, { headers: {"Authorization": `Bearer ${store.state.authInfo.accessToken}`}})
+        const res = await $axios.$get(`https://article-sharing-site-server.onrender.com/api/document/${params.articleId}`, { headers: {"Authorization": `Bearer ${store.state.authInfo.accessToken}`}})
             .catch(err => {
                 return console.error(err.response.data)
             })

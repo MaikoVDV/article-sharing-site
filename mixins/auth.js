@@ -80,7 +80,7 @@ export default {
                 // Using the access token (stored in cookies and also state), get user info from Auth0.
                 var options = {
                     method: 'GET',
-                    url: `http://article-sharing-site-server.onrender.com/api/users/profile/${userId}`
+                    url: `https://article-sharing-site-server.onrender.com/api/users/profile/${userId}`
                 };
                 thisObj.$axios.request(options).then(function (res) {
                     

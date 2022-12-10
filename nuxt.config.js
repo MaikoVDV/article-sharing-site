@@ -22,7 +22,7 @@ export default {
     },
     runtimeConfig: {
       public: {
-        apiBase: 'http://article-sharing-site-server.onrender.com/api'
+        apiBase: 'https://article-sharing-site-server.onrender.com/api'
       }
     },
     // Global CSS: https://go.nuxtjs.dev/config-css

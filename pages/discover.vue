@@ -12,7 +12,7 @@
 
         async asyncData({ $axios }) {
             try {
-                const res = await $axios.$get('http://article-sharing-site-server.onrender.com/api/documentList')
+                const res = await $axios.$get('https://article-sharing-site-server.onrender.com/api/documentList')
                 return { documents: res.data.documents}
             } catch {
                 console.log("Failed to request document list :(")
