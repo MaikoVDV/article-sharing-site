@@ -33,6 +33,7 @@ export default {
             return new Promise ((resolve, reject) => {
                 // Using the Auth Code received earlier, get an access token, ID token and (optionally) a refresh token from Auth0.
                 const verifier = this.$cookies.get("verifier")
+                const redirect_uri = "https://" + location.host;
                 console.log(this.$nuxt.context.query.code)
                 var options = {
                     method: 'POST',
@@ -43,7 +44,7 @@ export default {
                         client_id: 'BI1G7Qlow69cBRSJhfHMRJZZJWET2pGu',
                         code_verifier: verifier,
                         code: this.$nuxt.context.query.code,
-                        redirect_uri: 'http://localhost:3000'
+                        redirect_uri: redirect_uri
                     })
                 };
                 this.$axios.$request(options).then(function (response) {
