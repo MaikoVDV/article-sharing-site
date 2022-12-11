@@ -41,6 +41,7 @@ router.get("/", async (req, res) => {
             //console.log(response.data)
             let documents = response.data.data.documents;
             documents.sort((doc1, doc2) => new Date(doc1.date) - new Date(doc2.date))
+            documents.reverse();
             documents.forEach(document => {
                 document.date = ConvertDate(document.date)
             })
